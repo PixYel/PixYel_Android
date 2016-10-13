@@ -4,10 +4,16 @@
     tools:context=".MainActivity">
 
     <item
+        android:id="@+id/upload"
+        android:orderInCategory="200"
+        android:title="Upload"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_upload" />
+
+    <item
         android:id="@+id/refresh"
         android:orderInCategory="200"
         android:title="Refresh"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/stat_notify_sync_noanim"></item>
-
+        android:icon="@android:drawable/stat_notify_sync_noanim"/>
 </menu>
