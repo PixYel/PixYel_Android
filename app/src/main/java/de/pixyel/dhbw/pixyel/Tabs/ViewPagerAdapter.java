@@ -1,4 +1,4 @@
-package de.pixyel.dhbw.pixyel;
+package de.pixyel.dhbw.pixyel.Tabs;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -1,4 +1,5 @@
-package de.pixyel.dhbw.pixyel;
+package de.pixyel.dhbw.pixyel.Tabs;
+
 
         import android.os.Bundle;
         import android.support.annotation.Nullable;
@@ -7,13 +8,16 @@ package de.pixyel.dhbw.pixyel;
         import android.view.View;
         import android.view.ViewGroup;
 
+        import de.pixyel.dhbw.pixyel.R;
+
 /**
  * Created by hp1 on 21-01-2015.
  */
-public class Tab2 extends Fragment {
+public class Tab1 extends Fragment {
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab_2,container,false);
+        View v =inflater.inflate(R.layout.tab_1,container,false);
         return v;
     }
 }

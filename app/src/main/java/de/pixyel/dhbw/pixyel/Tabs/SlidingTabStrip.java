@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package de.pixyel.dhbw.pixyel;
+package de.pixyel.dhbw.pixyel.Tabs;
 
         import android.content.Context;
         import android.graphics.Canvas;
