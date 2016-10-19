@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class UpdatesFragment extends Fragment {
+public class TopFragment extends Fragment {
 
     @Nullable
     @Override

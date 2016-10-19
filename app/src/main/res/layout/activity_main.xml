@@ -6,14 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/orange"
-        android:id="@+id/toolbar"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Drawer With Swipe Tabs" />
+    <include layout="@layout/tool_bar"/>
 
     <android.support.v4.widget.DrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -40,10 +33,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:id="@+id/shitstuff"
+            android:id="@+id/drawer"
             app:itemTextColor="@color/black"
             app:menu="@menu/drawermenu"
-            android:layout_marginTop="-24dp"
+            android:layout_marginTop="0dp"
             />
 
 

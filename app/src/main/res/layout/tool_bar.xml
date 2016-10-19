@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="PixYel"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:id="@+id/toolbar"
     android:background="@color/colorPrimary"
     android:elevation="2dp"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"

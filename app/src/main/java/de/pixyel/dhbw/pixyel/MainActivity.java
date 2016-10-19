@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity{
          */
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mNavigationView = (NavigationView) findViewById(R.id.shitstuff) ;
+        mNavigationView = (NavigationView) findViewById(R.id.drawer) ;
 
         /**
          * Lets inflate the very first fragment
@@ -45,17 +45,13 @@ public class MainActivity extends AppCompatActivity{
                 mDrawerLayout.closeDrawers();
 
 
-
+/*
                 if (menuItem.getItemId() == R.id.nav_item_sent) {
                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.containerView,new SocialFragment()).commit();
 
                 }
-
-                if (menuItem.getItemId() == R.id.nav_item_inbox) {
-                    FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                    xfragmentTransaction.replace(R.id.containerView,new TabFragment()).commit();
-                }
+*/
 
                 return false;
             }
