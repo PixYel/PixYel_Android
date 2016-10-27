@@ -1,5 +1,6 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity{
@@ -45,13 +47,13 @@ public class MainActivity extends AppCompatActivity{
                 mDrawerLayout.closeDrawers();
 
 
-/*
-                if (menuItem.getItemId() == R.id.nav_item_sent) {
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.containerView,new SocialFragment()).commit();
 
+                if (menuItem.getItemId() == R.id.nav_item_likes){
+                    Log.d("test","test");
+                    Intent intent = new Intent(MainActivity.this, TestActivity.class);
+                    startActivity(intent);
                 }
-*/
+
 
                 return false;
             }
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity{
          * Setup Drawer Toggle of the Toolbar
          */
 
+
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name,
                 R.string.app_name);
@@ -71,4 +74,5 @@ public class MainActivity extends AppCompatActivity{
         mDrawerToggle.syncState();
 
     }
+
 }
