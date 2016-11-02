@@ -55,7 +55,7 @@ public class Compression {
                 }
             }
         }
-        return Base64.encodeToString(baos.toByteArray(), 0);
+        return Base64.encodeToString(baos.toByteArray(), Base64.NO_WRAP).replaceAll("//r", "");
     }
 
     /**
@@ -79,10 +79,11 @@ public class Compression {
      * @param toDecompress The String to be decompressed
      * @return The decompressed String
      */
+
     public static String decompress(String toDecompress) {
         InputStreamReader isr = null;
         try {
-            byte[] input = Base64.decode(toDecompress, 0);
+            byte[] input = Base64.decode(toDecompress, Base64.NO_WRAP);
             isr = new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(input)));
             StringWriter sw = new StringWriter();
             char[] chars = new char[1024];

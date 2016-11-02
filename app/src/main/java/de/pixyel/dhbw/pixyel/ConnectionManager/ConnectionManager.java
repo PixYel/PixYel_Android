@@ -10,33 +10,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-/**
- * Created by Niklas on 20.10.2016.
- */
-
 public class ConnectionManager {
-    Socket socket;//Der "Kanal" zum Server
-    ServerInputListener listener;//Ein eigener Thread, der auf eingehende Nachrichten vom Server horcht
-    String serverIP = "sharknoon.de";//IP-Adresse des Servers, zum testes localhost (Server und Client auf dem selben Computer), wird später "sharknoon.de" sein!
+    private Socket socket;//Der "Kanal" zum Server
+    private ServerInputListener listener;//Ein eigener Thread, der auf eingehende Nachrichten vom Server horcht
+    private String serverIP = "sharknoon.de";//IP-Adresse des Servers, zum testes localhost (Server und Client auf dem selben Computer), wird später "sharknoon.de" sein!
     //Der öffentliche Key des Servers
-    String serverPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmG8OfhJrkN9/rXLh7auyUPcq7UxmYModYswChY8hIMgZO4m+cxOWopxOptUAYedjA4ZAKGp/P1g6n6YaXvtPQqIbi7G5oCT4vbh0zYFgI3wNCJlKtUX1gb6uCQW3rPinANcPtlZoIyegAsn/OW0FMZtc1x8PN0H1MQTlcCctXdJdotuljeYriO1lkRfb3GsotLIYjciMqIMKGQRQ2Rhj81bnxP9FybdNuVIjlS6Rfx9fzaZ2BKIdm7O7/Dzn9TcSZEOZdOSS7CHMMKr14O26g+bR2HiGWx8AbOH2zP3DMpR9/Y8GUrjO6QPqA+GorICGYWxIlrcm4iYx8740FsDaQQIDAQAB";
+    private String serverPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmG8OfhJrkN9/rXLh7auyUPcq7UxmYModYswChY8hIMgZO4m+cxOWopxOptUAYedjA4ZAKGp/P1g6n6YaXvtPQqIbi7G5oCT4vbh0zYFgI3wNCJlKtUX1gb6uCQW3rPinANcPtlZoIyegAsn/OW0FMZtc1x8PN0H1MQTlcCctXdJdotuljeYriO1lkRfb3GsotLIYjciMqIMKGQRQ2Rhj81bnxP9FybdNuVIjlS6Rfx9fzaZ2BKIdm7O7/Dzn9TcSZEOZdOSS7CHMMKr14O26g+bR2HiGWx8AbOH2zP3DMpR9/Y8GUrjO6QPqA+GorICGYWxIlrcm4iYx8740FsDaQQIDAQAB";
     //Der private Key des Clients
-    String clientPrivateKey;
+    private String clientPrivateKey;
 
-    public void ConnectionManager(){
+    public ConnectionManager(){
 
-    }
-
-    public void PixYel_Client() throws InterruptedException {
-        //Ping dient nur zum Überprüfen der Socketverbindung, NICHT zum Überprüfen der Verschlüsselung und Compression
-        //ping();
-        //**Verbindung zum Server herstellen ENTWEDER Ping ODER connect aufrufen!!!!!!!!!!!11!!!!!elf!!
-        connect("HanswurstID");
-        //**Beispiel: sendet ein xml mit dem node "echo" an den Server, der server schickt daraufhin selbiges zurück
-        sendToServer(XML.createNewXML("echo").toXMLString());
-        //**Wenn man die App schließt oder ähnliches, einfach die disconnect Methode aufrufen
-        Thread.sleep(1000);
-        disconnect();
     }
 
     public void ping() {
@@ -51,8 +35,8 @@ public class ConnectionManager {
                 listener = new ServerInputListener();
                 new Thread(listener).start();
                 System.out.println("Sende Echo...");
-                PrintWriter raus = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-                raus.println("echo");
+                PrintWriter raus = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+                raus.println("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
                 raus.flush();
             } catch (UnknownHostException e) {
                 System.err.println("Unbekannter Host: " + e.getMessage());
@@ -84,15 +68,15 @@ public class ConnectionManager {
         return false;
     }
 
-    public void login(String storeID) {
+    private void login(String storeID) {
         //Erzeuge Client Private und Public Key
         String[] keyPair = Encryption.generateKeyPair();
         //Speichere den Private Key für andere Methoden sichtbar
-        clientPrivateKey = keyPair[1];
+        clientPrivateKey = keyPair[1].replaceAll("\\n", "");
         //Erzeuge ein XML mit einem Tag namens publickey und einem tag namens storeid, siehe Spezifikation!
         XML loginXML = XML.createNewXML("login").addChildren("storeid", "publickey");
         loginXML.getFirstChild("storeid").setContent(storeID);
-        loginXML.getFirstChild("publickey").setContent(keyPair[0]);
+        loginXML.getFirstChild("publickey").setContent(keyPair[0].replaceAll("\\n",""));
         //Übermittle dem Server meinen Public Key
         sendToServer(loginXML.toXMLString());
     }
@@ -101,7 +85,6 @@ public class ConnectionManager {
         //Unwahrscheinlicher Fall, dass der Socket sich unerwartet beendet hat
         if (socket == null) {
             System.out.println("Server unerreichbar");
-            return;
         } else {
             try {
                 sendToServer(XML.createNewXML("disconnect").toXMLString());
@@ -109,7 +92,6 @@ public class ConnectionManager {
                 //"Kanal" zum Server schließen
                 socket.close();
                 System.out.println("Habe mich beim Server abgemeldet");
-                return;
             } catch (IOException ex) {
                 System.out.println("Konnte Socket nicht schliessen!");
             }
@@ -121,9 +103,13 @@ public class ConnectionManager {
         try {
             String compressed = Compression.compress(toSend);
             String encrypted = Encryption.encrypt(compressed, serverPublicKey);
-            PrintWriter raus = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+            System.out.println("Encrypted 1: \"" + encrypted + "\" ===========================================!");
+            //encrypted.replaceAll("\\n", "");
+            PrintWriter raus = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
             raus.println(encrypted);
             raus.flush();
+            System.out.println("");
+            System.out.println("Encrypted 2: \"" + encrypted + "\" gesendet!");
             System.out.println("Erfolgreich \"" + toSend + "\" gesendet!");
             return true;
         } catch (Exception e) {
@@ -141,10 +127,10 @@ public class ConnectionManager {
         }
     }
 
-    public class ServerInputListener implements Runnable {
+    private class ServerInputListener implements Runnable {
 
         //Dient zum einfachen Beenden dieses Threads
-        public boolean run = true;
+        boolean run = true;
 
         @Override
         public void run() {
@@ -153,7 +139,7 @@ public class ConnectionManager {
             String string;
             while (!socket.isClosed() && socket.isConnected() && socket.isBound() && run) {
                 try {
-                    rein = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    rein = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
                     string = rein.readLine();
                     if (run) {
                         onStringReceived(string);
@@ -180,13 +166,13 @@ public class ConnectionManager {
             }
         }
 
-        public void stop() {
+        void stop() {
             run = false;
             System.out.println("Listener für Nachrichten vom Server erfolgreich gestoppt!");
         }
     }
 
-    public String onStringReceived(String string) {
+    private String onStringReceived(String string) {
         if (string.contains("echo")) {
             System.out.println("Nachricht vom Server: " + string);
             return string;

@@ -16,8 +16,6 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import android.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Josua Frank
@@ -59,15 +57,15 @@ public class Encryption {
     public static String[] generateKeyPair() {
         String[] result = new String[2];
         try {
-            // Get an instance of the RSA key generator
+            // Get an instance of the RSA/ECB/PKCS1Padding key generator
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
             //Initialize it with 2048 Bit Encryption (keysize)
             kpg.initialize(keyLength);
             // Generate the keys — might take sometime on slow computers
             KeyPair kp = kpg.generateKeyPair();
             //Gets the encoded public and private Keys as String
-            result[0] = Base64.encodeToString(kp.getPublic().getEncoded(),0);//PublicKey
-            result[1] = Base64.encodeToString(kp.getPrivate().getEncoded(),0);//PrivateKey
+            result[0] = Base64.encodeToString(kp.getPublic().getEncoded(), Base64.NO_WRAP);//PublicKey
+            result[1] = Base64.encodeToString(kp.getPrivate().getEncoded(), Base64.NO_WRAP);//PrivateKey
         } catch (NoSuchAlgorithmException ex) {
             System.err.println("Could not create KeyPair: " + ex);
         }
@@ -108,9 +106,9 @@ public class Encryption {
     public static String encrypt(String text, String publicKey) {
         try {
             //Creates the Public Key from the String
-            PublicKey pubKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(Base64.decode(publicKey, 0)));
-            // Get an instance of the Cipher for RSA encryption/decryption
-            Cipher encrypter = Cipher.getInstance("RSA");
+            PublicKey pubKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(Base64.decode(publicKey, Base64.NO_WRAP)));
+            // Get an instance of the Cipher for RSA/ECB/PKCS1Padding encryption/decryption
+            Cipher encrypter = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             // Initiate the Cipher, telling it that it is going to Encrypt, giving it the public key
             encrypter.init(Cipher.ENCRYPT_MODE, pubKey);
 
@@ -143,7 +141,7 @@ public class Encryption {
             }
 
             //Returns the encrypted byte array as a string
-            return Base64.encodeToString(encrypted, 0);
+            return Base64.encodeToString(encrypted, Base64.NO_WRAP);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException ex) {
             System.err.println("Could String not encrypt: " + ex);
         } catch (UnsupportedEncodingException ex) {
@@ -185,14 +183,14 @@ public class Encryption {
     public static String decrypt(String toDecrypt, String privateKey) {
         try {
             //Generates the Private Key from the byteArray
-            PrivateKey privKey = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(privateKey, 0)));
-            // Get an instance of the Cipher for RSA encryption/decryption
-            Cipher decrypter = Cipher.getInstance("RSA");
+            PrivateKey privKey = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(privateKey, Base64.NO_WRAP)));
+            // Get an instance of the Cipher for RSA/ECB/PKCS1Padding encryption/decryption
+            Cipher decrypter = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             // Initiate the Cipher, telling it that it is going to Decrypt, giving it the private key
             decrypter.init(Cipher.DECRYPT_MODE, privKey);
 
             //converts the encrypted String to a encrypted byte array
-            byte[] encrypted = Base64.decode(toDecrypt, 0);
+            byte[] encrypted = Base64.decode(toDecrypt, Base64.NO_WRAP);
 
             //I dont know why but this is the max amount of encryption data
             int encryptedKeyLength = (keyLength / 8);
@@ -205,7 +203,7 @@ public class Encryption {
             byte[] textAsBytes = null;
 
             for (int i = amountOfSplitting - 1; i >= 0; i--) {//Count downwards because this way you know in the first run the amount of bytes of the last splitted array
-                //splitts the array so that the individual arrays can be decrypted, on large array would not fit in the RSA keylenth
+                //splitts the array so that the individual arrays can be decrypted, on large array would not fit in the RSA/ECB/PKCS1Padding keylenth
                 System.arraycopy(encrypted, i * encryptedKeyLength, textAsList[i], 0, encryptedKeyLength);
                 //decrypt every byte array
                 textAsList[i] = decrypter.doFinal(textAsList[i]);
