@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.LinkedList;
@@ -16,14 +18,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class CardViewHolder extends RecyclerView.ViewHolder {
-        public TextView mImage;
+        public ImageView mImage;
         public TextView mLikes;
-        public TextView mDislikes;
+        public Button mUp;
+        public Button mDown;
         public CardViewHolder(View v) {
             super(v);
-            mImage = (TextView) v.findViewById(R.id.CardTitle);
+            mImage = (ImageView) v.findViewById(R.id.CardImage);
             mLikes = (TextView) v.findViewById(R.id.CardLikes);
-            mDislikes = (TextView) v.findViewById(R.id.CardDislikes);
+            mUp = (Button) v.findViewById(R.id.CardUp);
+            mDown = (Button) v.findViewById(R.id.CardDown);
+
         }
     }
 
@@ -46,7 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(CardViewHolder holder, int index) {
-        holder.mImage.setText(mDataset.get(index).image);
+
 
     }
 
