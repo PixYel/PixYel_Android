@@ -1,54 +1,58 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private String[] mDataset;
+import java.util.LinkedList;
+
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
+    private LinkedList<ImageCard> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView mTextView;
-        public ViewHolder(TextView v) {
+    public static class CardViewHolder extends RecyclerView.ViewHolder {
+        public TextView mImage;
+        public TextView mLikes;
+        public TextView mDislikes;
+        public CardViewHolder(View v) {
             super(v);
-            mTextView = v;
+            mImage = (TextView) v.findViewById(R.id.CardTitle);
+            mLikes = (TextView) v.findViewById(R.id.CardLikes);
+            mDislikes = (TextView) v.findViewById(R.id.CardDislikes);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(String[] myDataset) {
+    public MyAdapter(LinkedList<ImageCard> myDataset) {
         mDataset = myDataset;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public MyAdapter.CardViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder((TextView)v);  //You need a cast here
+        CardViewHolder vh = new CardViewHolder(v);  //You need a cast here
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset[position]);
+    public void onBindViewHolder(CardViewHolder holder, int index) {
+        holder.mImage.setText(mDataset.get(index).image);
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }

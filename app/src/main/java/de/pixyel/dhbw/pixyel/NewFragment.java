@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.LinkedList;
+
 import static android.support.v7.recyclerview.R.styleable.RecyclerView;
 
 public class NewFragment extends Fragment {
@@ -21,10 +23,10 @@ public class NewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.primary_layout,null);
+        LinkedList<ImageCard> imageList = new LinkedList<ImageCard>();
 
-        String test[] = new String[1000];   // Test
-        for(int i = 0; i < test.length; i++){
-            test[i] = String.valueOf(i);
+        for(int i = 0; i < 1000; i++){
+            imageList.add(new ImageCard(String.valueOf(i)));
         }
 
 
@@ -39,7 +41,7 @@ public class NewFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(test);
+        mAdapter = new MyAdapter(imageList);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
