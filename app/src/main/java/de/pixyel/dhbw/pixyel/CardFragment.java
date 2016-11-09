@@ -1,5 +1,7 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,9 @@ public class CardFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private ByteArrayOutputStream stream;
+    private byte[] imgByte;
+
     private LinkedList<ImageCard> imageList;
 
     @Nullable
@@ -30,6 +35,14 @@ public class CardFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.primary_layout,null);
         imageList = new LinkedList<ImageCard>();
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();// Create object of bitmapfactory's option method for further option use
+        options.inJustDecodeBounds = true;
+
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.jet);
+        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        System.out.println("Bytes:" + image.getByteCount());
+        imgByte = stream.toByteArray();
 
 
         imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
