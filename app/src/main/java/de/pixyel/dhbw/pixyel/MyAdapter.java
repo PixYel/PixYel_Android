@@ -1,18 +1,21 @@
 package de.pixyel.dhbw.pixyel;
 
-import android.media.Image;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.LinkedList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     private LinkedList<ImageCard> mDataset;
+    private Activity mActivity;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -20,21 +23,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     public static class CardViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImage;
         public TextView mLikes;
-        public Button mUp;
-        public Button mDown;
+        public ImageButton mUp;
+        public ImageButton mDown;
         public CardViewHolder(View v) {
             super(v);
             mImage = (ImageView) v.findViewById(R.id.CardImage);
             mLikes = (TextView) v.findViewById(R.id.CardLikes);
-            mUp = (Button) v.findViewById(R.id.CardUp);
-            mDown = (Button) v.findViewById(R.id.CardDown);
+            mUp = (ImageButton) v.findViewById(R.id.CardUp);
+            mDown = (ImageButton) v.findViewById(R.id.CardDown);
 
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(LinkedList<ImageCard> myDataset) {
+    public MyAdapter(LinkedList<ImageCard> myDataset, Activity myActivity) {
         mDataset = myDataset;
+        mActivity = myActivity;
     }
 
     // Create new views (invoked by the layout manager)
@@ -52,6 +56,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     @Override
     public void onBindViewHolder(CardViewHolder holder, int index) {
 
+        Glide.with(mActivity).load(mDataset.get(index).url).into(holder.mImage);
+        holder.mLikes.setText("hallo");
 
     }
 

@@ -1,5 +1,8 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,9 +13,22 @@ import java.util.Date;
 public class ImageCard {
     int likes;
     int dislikes;
-    String image;
+    String url;
 
-    ImageCard(String image){
-        this.image = image;
+    ImageCard(String url){
+        this.url = url;
     }
+
+    public void like(){
+        this.likes++;
+    }
+
+    public void dislike(){
+        this.dislikes++;
+    }
+
+    public int getLikes(){
+        return this.likes-this.dislikes;
+    }
+
 }
