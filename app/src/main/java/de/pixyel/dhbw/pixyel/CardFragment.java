@@ -39,10 +39,10 @@ public class CardFragment extends Fragment {
         BitmapFactory.Options options = new BitmapFactory.Options();// Create object of bitmapfactory's option method for further option use
         options.inJustDecodeBounds = true;
 
-        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.jet);
-        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        System.out.println("Bytes:" + image.getByteCount());
-        imgByte = stream.toByteArray();
+        //Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.jet);
+//        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        //System.out.println("Bytes:" + image.getByteCount());
+        //imgByte = stream.toByteArray();
 
 
         imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
