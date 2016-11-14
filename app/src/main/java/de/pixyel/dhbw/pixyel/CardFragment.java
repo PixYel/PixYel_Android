@@ -18,15 +18,15 @@ import java.util.LinkedList;
 import static android.support.v7.recyclerview.R.styleable.RecyclerView;
 
 public class CardFragment extends Fragment {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private static RecyclerView mRecyclerView;
+    private static RecyclerView.Adapter mAdapter;
+    private static RecyclerView.LayoutManager mLayoutManager;
+    private static SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private ByteArrayOutputStream stream;
-    private byte[] imgByte;
+    private static ByteArrayOutputStream stream;
+    private static byte[] imgByte;
 
-    private LinkedList<ImageCard> imageList;
+    public static LinkedList<ImageCard> imageList;
 
     @Nullable
     @Override
@@ -70,12 +70,12 @@ public class CardFragment extends Fragment {
         return rootView;
     }
 
-    private void refreshItems(){
+    public static void refreshItems(){
         imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
         onItemsLoadComplete();
     }
 
-    private void onItemsLoadComplete(){
+    public static void onItemsLoadComplete(){
         mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
