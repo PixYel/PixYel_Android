@@ -11,6 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import java.util.concurrent.Executors;
+
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
+
 public class MainActivity extends AppCompatActivity{
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
@@ -72,6 +76,9 @@ public class MainActivity extends AppCompatActivity{
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mDrawerToggle.syncState();
+
+        // Connection to Server
+        Executors.newFixedThreadPool(1).submit(new ConnectionManager());
 
     }
 

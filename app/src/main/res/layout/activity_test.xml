@@ -17,7 +17,7 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/toSend"
-        android:text="String to Send" />
+        android:text="echo" />
 
     <Button
         android:text="Conntect to Server"
@@ -34,13 +34,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/answer" />
-
-    <Button
-        android:text="TestBase64"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:onClick="buttonTest" />
 
     <Button
         android:text="Camera"

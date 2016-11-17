@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity__big_picture"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.pixyel.dhbw.pixyel.activity_BigPicture">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:title="PixYel"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimary"
+        android:elevation="2dp"
+        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/comments" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/jet"
+            android:id="@+id/imageView"
+            android:cropToPadding="false"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/toolbar"/>
+    </ListView>
+
+</RelativeLayout>

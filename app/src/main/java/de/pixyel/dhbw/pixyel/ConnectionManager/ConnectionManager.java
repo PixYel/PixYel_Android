@@ -10,20 +10,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class ConnectionManager {
-    private Socket socket;//Der "Kanal" zum Server
-    private ServerInputListener listener;//Ein eigener Thread, der auf eingehende Nachrichten vom Server horcht
-    private String serverIP = "sharknoon.de";//IP-Adresse des Servers, zum testes localhost (Server und Client auf dem selben Computer), wird später "sharknoon.de" sein!
+public class ConnectionManager implements Runnable{
+    private static Socket socket;//Der "Kanal" zum Server
+    private static ServerInputListener listener;//Ein eigener Thread, der auf eingehende Nachrichten vom Server horcht
+    private static String serverIP = "sharknoon.de";//IP-Adresse des Servers, zum testes localhost (Server und Client auf dem selben Computer), wird später "sharknoon.de" sein!
     //Der öffentliche Key des Servers
-    private String serverPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmG8OfhJrkN9/rXLh7auyUPcq7UxmYModYswChY8hIMgZO4m+cxOWopxOptUAYedjA4ZAKGp/P1g6n6YaXvtPQqIbi7G5oCT4vbh0zYFgI3wNCJlKtUX1gb6uCQW3rPinANcPtlZoIyegAsn/OW0FMZtc1x8PN0H1MQTlcCctXdJdotuljeYriO1lkRfb3GsotLIYjciMqIMKGQRQ2Rhj81bnxP9FybdNuVIjlS6Rfx9fzaZ2BKIdm7O7/Dzn9TcSZEOZdOSS7CHMMKr14O26g+bR2HiGWx8AbOH2zP3DMpR9/Y8GUrjO6QPqA+GorICGYWxIlrcm4iYx8740FsDaQQIDAQAB";
+    private static String serverPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmG8OfhJrkN9/rXLh7auyUPcq7UxmYModYswChY8hIMgZO4m+cxOWopxOptUAYedjA4ZAKGp/P1g6n6YaXvtPQqIbi7G5oCT4vbh0zYFgI3wNCJlKtUX1gb6uCQW3rPinANcPtlZoIyegAsn/OW0FMZtc1x8PN0H1MQTlcCctXdJdotuljeYriO1lkRfb3GsotLIYjciMqIMKGQRQ2Rhj81bnxP9FybdNuVIjlS6Rfx9fzaZ2BKIdm7O7/Dzn9TcSZEOZdOSS7CHMMKr14O26g+bR2HiGWx8AbOH2zP3DMpR9/Y8GUrjO6QPqA+GorICGYWxIlrcm4iYx8740FsDaQQIDAQAB";
     //Der private Key des Clients
-    private String clientPrivateKey;
+    private static String clientPrivateKey;
 
-    public ConnectionManager(){
 
-    }
-
-    public void ping() {
+    public static void ping() {
         //Falls der Server unerreichbar ist, versucht er es 'attemps' mal
         int attempts = 10;
         while (attempts > 0 && (socket == null || !socket.isConnected())) {
@@ -46,7 +43,7 @@ public class ConnectionManager {
         }
     }
 
-    public boolean connect(String storeID) {
+    public static boolean connect(String storeID) {
         //Falls der Server unerreichbar ist, versucht er es 'attemps' mal
         int attempts = 10;
         while (attempts > 0 && (socket == null || !socket.isConnected())) {
@@ -68,7 +65,7 @@ public class ConnectionManager {
         return false;
     }
 
-    private void login(String storeID) {
+    private static void login(String storeID) {
         //Erzeuge Client Private und Public Key
         String[] keyPair = Encryption.generateKeyPair();
         //Speichere den Private Key für andere Methoden sichtbar
@@ -81,7 +78,7 @@ public class ConnectionManager {
         sendToServer(loginXML.toXMLString());
     }
 
-    public void disconnect() {
+    public static void disconnect() {
         //Unwahrscheinlicher Fall, dass der Socket sich unerwartet beendet hat
         if (socket == null) {
             System.out.println("Server unerreichbar");
@@ -99,7 +96,7 @@ public class ConnectionManager {
         }
     }
 
-    public boolean sendToServer(String toSend) {
+    public static boolean sendToServer(String toSend) {
         try {
             String compressed = Compression.compress(toSend);
             String encrypted = Encryption.encrypt(compressed, serverPublicKey);
@@ -127,7 +124,12 @@ public class ConnectionManager {
         }
     }
 
-    private class ServerInputListener implements Runnable {
+    @Override
+    public void run() {
+        this.connect("Jan");
+    }
+
+    private static class ServerInputListener implements Runnable {
 
         //Dient zum einfachen Beenden dieses Threads
         boolean run = true;
@@ -172,7 +174,7 @@ public class ConnectionManager {
         }
     }
 
-    private String onStringReceived(String string) {
+    private static String onStringReceived(String string) {
         if (string.contains("echo")) {
             System.out.println("Nachricht vom Server: " + string);
             return string;
