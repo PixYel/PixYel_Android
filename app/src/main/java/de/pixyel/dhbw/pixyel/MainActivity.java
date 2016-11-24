@@ -1,16 +1,23 @@
 package de.pixyel.dhbw.pixyel;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
+import java.io.File;
+import java.util.Date;
 import java.util.concurrent.Executors;
 
 import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
@@ -20,6 +27,10 @@ public class MainActivity extends AppCompatActivity{
     NavigationView mNavigationView;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
+
+    public File folder;
+    private Uri photoUri;
+    private static final int TAKE_PICTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +91,42 @@ public class MainActivity extends AppCompatActivity{
         // Connection to Server
         Executors.newFixedThreadPool(1).submit(new ConnectionManager());
 
+
+
+        final ImageButton upload = (ImageButton) findViewById(R.id.upload);
+        upload.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                String fileName = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+                folder = getFile(fileName);
+                photoUri = Uri.fromFile(folder);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(intent, TAKE_PICTURE);
+            }
+        });
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == TAKE_PICTURE) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                FileTransmitter.send(folder);
+                NewFragment.addPhoto(photoUri);
+            }
+        }
+    }
+
+    public File getFile(String fileName){
+        File folder = new File("sdcard/DCIM/PixYel");
+
+        if (!folder.exists()){
+            folder.mkdir();
+        }
+
+        File image_file = new File(folder, fileName);
+        return image_file;
+    }
 }
