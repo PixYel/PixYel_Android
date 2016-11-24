@@ -46,7 +46,7 @@ public class TestActivity extends AppCompatActivity {
         TextView toSend = (TextView) view.findViewById(R.id.toSend);
         TextView answer = (TextView) view.findViewById(R.id.answer);
         String string = (String) toSend.getText();
-        manager.sendToServer(XML.createNewXML(string).toXMLString());
+        manager.sendToServer(XML.createNewXML(string));
 
     }
 

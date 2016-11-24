@@ -67,15 +67,22 @@ public class ConnectionManager implements Runnable{
 
     private static void login(String storeID) {
         //Erzeuge Client Private und Public Key
-        String[] keyPair = Encryption.generateKeyPair();
+        String[] keyPair = new String[0];
+        try {
+            keyPair = Encryption.generateKeyPair();
+        } catch (Encryption.EncryptionException e) {
+            e.printStackTrace();
+            return;
+        }
         //Speichere den Private Key für andere Methoden sichtbar
         clientPrivateKey = keyPair[1].replaceAll("\\n", "");
         //Erzeuge ein XML mit einem Tag namens publickey und einem tag namens storeid, siehe Spezifikation!
-        XML loginXML = XML.createNewXML("login").addChildren("storeid", "publickey");
-        loginXML.getFirstChild("storeid").setContent(storeID);
-        loginXML.getFirstChild("publickey").setContent(keyPair[0].replaceAll("\\n",""));
+        XML loginXML = XML.createNewXML("login");
+        loginXML.addChildren("storeId", "publicKey");
+        loginXML.getFirstChild("storeId").setContent(storeID);
+        loginXML.getFirstChild("publicKey").setContent(keyPair[0].replaceAll("\\n",""));
         //Übermittle dem Server meinen Public Key
-        sendToServer(loginXML.toXMLString());
+        sendToServer(loginXML);
     }
 
     public static void disconnect() {
@@ -84,7 +91,7 @@ public class ConnectionManager implements Runnable{
             System.out.println("Server unerreichbar");
         } else {
             try {
-                sendToServer(XML.createNewXML("disconnect").toXMLString());
+                sendToServer(XML.createNewXML("disconnect"));
                 listener.stop();
                 //"Kanal" zum Server schließen
                 socket.close();
@@ -96,9 +103,10 @@ public class ConnectionManager implements Runnable{
         }
     }
 
-    public static boolean sendToServer(String toSend) {
+    public static boolean sendToServer(XML toSend) {
         try {
-            String compressed = Compression.compress(toSend);
+            String ready = XML.createNewXML("request").addChild(toSend).toString();
+            String compressed = Compression.compress(ready);
             String encrypted = Encryption.encrypt(compressed, serverPublicKey);
             System.out.println("Encrypted 1: \"" + encrypted + "\" ===========================================!");
             //encrypted.replaceAll("\\n", "");
@@ -180,7 +188,12 @@ public class ConnectionManager implements Runnable{
             return string;
         }
         //Decomprimiere den String
-        String decrypted = Encryption.decrypt(string, clientPrivateKey);
+        String decrypted = null;
+        try {
+            decrypted = Encryption.decrypt(string, clientPrivateKey);
+        } catch (Encryption.EncryptionException e) {
+            e.printStackTrace();
+        }
         String decompressed = Compression.decompress(decrypted);
         try {
             //Parse den String in ein XML

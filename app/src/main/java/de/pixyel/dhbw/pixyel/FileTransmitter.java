@@ -1,6 +1,8 @@
 package de.pixyel.dhbw.pixyel;
 
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Base64;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -20,31 +22,28 @@ import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
 public class FileTransmitter {
     public static void send(File file){
         String imageString = null;
-        byte[] contents = new byte[1024];
+        BufferedInputStream buf = null;
+        int size = (int) file.length();
+        byte[] bytes = new byte[size];
         try {
-            BufferedInputStream bi = new BufferedInputStream(new FileInputStream(file));
-            bi.read(contents);
-            int i = 0;
-            while(bi.read(contents)!= -1){
-                imageString += contents.toString();
-            }
+            buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return;
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
 
-        XML xml = XML.createNewXML("request").addChild("upload");
-        XML upload = xml.getFirstChild().addChildren("data","long","lat");
-        upload.getFirstChild("data").setContent(imageString);
-        upload.getFirstChild("long").setContent("2345");
-        upload.getFirstChild("lat").setContent("23452345");
+        imageString = Base64.encodeToString(bytes, Base64.NO_WRAP);
+        XML xml = XML.createNewXML("upload");
+        xml.addChildren("data","long","lat");
+        xml.getFirstChild("data").setContent(imageString);
+        xml.getFirstChild("long").setContent("2345");
+        xml.getFirstChild("lat").setContent("23452345");
 
-
-        System.out.println("Connected");
-        ConnectionManager.sendToServer(xml.toString());
+        System.out.println("Bild: "+imageString);
+        ConnectionManager.sendToServer(xml);
         System.out.println("Gesendet");
     }
 }
