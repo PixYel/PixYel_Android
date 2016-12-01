@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.LinkedList;
 
+import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     private LinkedList<ImageCard> mDataset;
     private Activity mActivity;
@@ -54,10 +56,36 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(CardViewHolder holder, int index) {
+    public void onBindViewHolder(final CardViewHolder holder, int index) {
 
         Glide.with(mActivity).load(mDataset.get(index).url).into(holder.mImage);
         holder.mLikes.setText("hallo");
+
+
+        //setzt den upvoteknopf auf clicklistener
+        holder.mUp.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                holder.mLikes.setText("tschüss");
+                XML vote = XML.createNewXML("request").addChild("vote");
+                vote.addChild("id").setContent("BildID");
+                vote.addChild("upvote").setContent("1");
+                String s = vote.toString();
+
+            }
+        });
+        //setzt den downvoteknopf auf clicklistener
+        holder.mDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.mLikes.setText("hallo");
+                XML vote = XML.createNewXML("request").addChild("vote");
+                vote.addChild("id").setContent("BildID");
+                vote.addChild("upvote").setContent("-1");
+                String s = vote.toString();
+            }
+        });
+
 
     }
 

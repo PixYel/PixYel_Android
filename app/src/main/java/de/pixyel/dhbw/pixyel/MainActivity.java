@@ -4,13 +4,17 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
@@ -54,6 +58,24 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //ein LocationMAnager wird initialisiert
+        //wenn die Erlaubnis zur Location-Nutzung in den Einstellungen noch nicht erteilt wurde, wird der User mit einem PopUp so lange darauf hingewiesen bis er das ändert
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            PopUp popup =new PopUp();
+            popup.PopUp(MainActivity.this, "Erlaubnis zur GPS-Nutzung fehlt", "Bitte Berechtigung zur Standorterkennung für PixYel in den Einstellungen im Andwendungsmanager geben");
+            return;
+        }
+        //wenn es einen NETWORK_PROVIDER gibt soll dieser verwendet werden
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, listener);
+        }
+        //ansonsten soll die Ortung über GPS_PROVIDER erfolgen
+        else {locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, listener);
+        }
+
 
         /**
          *Setup the DrawerLayout and NavigationView
