@@ -101,19 +101,35 @@ public class MainActivity extends AppCompatActivity{
          * Setup click events on the Navigation View Items.
          */
 
+        /** Menüpunkte */
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                mDrawerLayout.closeDrawers();
+            mDrawerLayout.closeDrawers();
 
-                if (menuItem.getItemId() == R.id.nav_item_likes){
-                    Log.d("test","test");
-                    Intent intent = new Intent(MainActivity.this, TestActivity.class);
-                    startActivity(intent);
-                }
+            /** Eigene Uploads und Likes. Comments bei Bedarf in "TabFragmentOwn.java" anlegen */
+            if (menuItem.getItemId() == R.id.nav_item_own){
+                //Log.d("test","test");
+                Intent intent = new Intent(MainActivity.this, OwnActivity.class);
+                startActivity(intent);
+            }
+
+            /** Einstellungen */
+            if (menuItem.getItemId() == R.id.nav_item_settings){
+                //Log.d("test","test");
+                Intent intent = new Intent(MainActivity.this, Settings.class);
+                startActivity(intent);
+            }
+
+            /** Hilfe & Impressum */
+            if (menuItem.getItemId() == R.id.nav_item_help){
+                //Log.d("test","test");
+                Intent intent = new Intent(MainActivity.this, TestActivity.class);  // TODO: Help.java anlegen
+                startActivity(intent);
+            }
 
 
-                return false;
+            return false;
             }
 
         });

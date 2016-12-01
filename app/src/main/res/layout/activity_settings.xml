@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="de.pixyel.dhbw.pixyel.Settings">
 
     <android.support.v7.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,6 +16,29 @@
         android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
         app:layout_scrollFlags="scroll|enterAlways">
 
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back"
+            app:srcCompat="@drawable/ic_keyboard_backspace_white_36dp"
+            android:tint="@color/white"
+            android:background="@color/colorPrimary"/>
+
     </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/BigImage"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/comments" >
+        </ListView>
+
+    </RelativeLayout>
 
 </LinearLayout>
