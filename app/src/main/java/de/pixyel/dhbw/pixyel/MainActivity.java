@@ -1,5 +1,7 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.*;
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -26,6 +28,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,9 +48,6 @@ public class MainActivity extends AppCompatActivity{
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
-    private Bitmap gaelrieBitmap;
-    private InputStream galerieInputStream;
-    private String galerieString;
     public File folder;
     private Uri photoUri;
     private Uri galerieUri;
@@ -77,6 +77,11 @@ public class MainActivity extends AppCompatActivity{
         }
 
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            PopUp popup =new PopUp();
+            popup.PopUp(MainActivity.this, "Erlaubnis für Speicherzugriff oder Kamera fehlen", "Bitte Berechtigung für PixYel in den Einstellungen im Andwendungsmanager geben");
+            return;
+        }
         /**
          *Setup the DrawerLayout and NavigationView
          */
@@ -100,8 +105,6 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 mDrawerLayout.closeDrawers();
-
-
 
                 if (menuItem.getItemId() == R.id.nav_item_likes){
                     Log.d("test","test");
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(intent, UPLOAD_PICTURE);
             }
         });
+
     }
 
     @Override
@@ -182,4 +186,8 @@ public class MainActivity extends AppCompatActivity{
         return image_file;
     }
 
+    public void ImageClick(View view){
+        Intent intent = new Intent(MainActivity.this, activity_BigPicture.class);
+        startActivity(intent);
+    }
 }

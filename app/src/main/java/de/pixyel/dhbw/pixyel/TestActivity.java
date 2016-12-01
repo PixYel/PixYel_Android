@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.Date;
 
-import de.pixyel.dhbw.pixyel.ConnectionManager.Compression;
 import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
 import de.pixyel.dhbw.pixyel.ConnectionManager.Encryption;
 import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
