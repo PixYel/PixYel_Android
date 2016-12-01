@@ -35,8 +35,18 @@
                 <android.support.v7.widget.AppCompatImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/upload"
+                    android:id="@+id/pictures"
                     app:srcCompat="@drawable/ic_camera_white_36dp"
+                    android:tint="@color/white"
+                    android:background="@color/colorPrimary"
+                    android:layout_gravity="end"
+                    android:minWidth="20pt" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/upload"
+                    app:srcCompat="@drawable/ic_upload_white_36dp"
                     android:tint="@color/white"
                     android:background="@color/colorPrimary"
                     android:layout_gravity="end"
