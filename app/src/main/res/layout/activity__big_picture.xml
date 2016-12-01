@@ -7,16 +7,7 @@
     android:layout_height="match_parent"
     tools:context="de.pixyel.dhbw.pixyel.activity_BigPicture">
 
-    <android.support.v7.widget.Toolbar
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:title="PixYel"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/toolbar"
-        android:background="@color/colorPrimary"
-        android:elevation="2dp"
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
-        xmlns:android="http://schemas.android.com/apk/res/android" />
+    <include layout="@layout/tool_bar"/>
 
     <ListView
         android:layout_width="match_parent"
