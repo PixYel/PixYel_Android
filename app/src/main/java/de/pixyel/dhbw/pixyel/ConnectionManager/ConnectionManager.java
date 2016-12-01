@@ -106,8 +106,7 @@ public class ConnectionManager implements Runnable{
     public static boolean sendToServer(XML toSend) {
         try {
             String ready = XML.createNewXML("request").addChild(toSend).toString();
-            String compressed = Compression.compress(ready);
-            String encrypted = Encryption.encrypt(compressed, serverPublicKey);
+            String encrypted = Encryption.encrypt(ready, serverPublicKey);
             System.out.println("Encrypted 1: \"" + encrypted + "\" ===========================================!");
             //encrypted.replaceAll("\\n", "");
             PrintWriter raus = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
@@ -194,10 +193,9 @@ public class ConnectionManager implements Runnable{
         } catch (Encryption.EncryptionException e) {
             e.printStackTrace();
         }
-        String decompressed = Compression.decompress(decrypted);
         try {
             //Parse den String in ein XML
-            XML receivedXML = XML.openXML(decompressed);
+            XML receivedXML = XML.openXML(decrypted);
             //Beispielvorgehen: Zeige den XML Baum in der Ausgabe an
             System.out.println("Command received: \n" + receivedXML.toString());
             return receivedXML.toString();
