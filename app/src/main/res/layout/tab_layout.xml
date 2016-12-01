@@ -6,11 +6,8 @@
     android:orientation="vertical"
     android:layout_height="wrap_content">
 
-
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
-        app:tabGravity="fill"
-        app:tabMode="fixed"
         android:background="@color/material_blue_grey_800"
         app:tabIndicatorColor="@color/orange"
         app:tabSelectedTextColor="@color/orange"
@@ -25,7 +22,5 @@
         android:layout_height="match_parent">
 
     </android.support.v4.view.ViewPager>
-
-
 
 </LinearLayout>
