@@ -69,5 +69,6 @@ public class TestActivity extends AppCompatActivity {
                 NewFragment.addPhoto(photoUri);
             }
         }
+
     }
 }

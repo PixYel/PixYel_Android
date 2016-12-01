@@ -1,12 +1,19 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.concurrent.Executors;
 
@@ -28,9 +41,14 @@ public class MainActivity extends AppCompatActivity{
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
+    private Bitmap gaelrieBitmap;
+    private InputStream galerieInputStream;
+    private String galerieString;
     public File folder;
     private Uri photoUri;
+    private Uri galerieUri;
     private static final int TAKE_PICTURE = 1;
+    private static final int UPLOAD_PICTURE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +111,8 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        final ImageButton upload = (ImageButton) findViewById(R.id.upload);
-        upload.setOnClickListener(new View.OnClickListener(){
+        final ImageButton pictures = (ImageButton) findViewById(R.id.pictures);
+        pictures.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                 String fileName = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
@@ -104,17 +122,30 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(intent, TAKE_PICTURE);
             }
         });
+
+        final ImageButton upload = (ImageButton) findViewById(R.id.upload);
+        upload.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, UPLOAD_PICTURE);
+            }
+        });
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == TAKE_PICTURE) {
+        if (resultCode == RESULT_OK) {
             // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
+            if (requestCode == TAKE_PICTURE) {
                 FileTransmitter.send(folder);
                 NewFragment.addPhoto(photoUri);
+            }
+            else if (requestCode == UPLOAD_PICTURE){
+                galerieUri = data.getData();
+                NewFragment.addPhoto(galerieUri);
             }
         }
     }
@@ -129,4 +160,5 @@ public class MainActivity extends AppCompatActivity{
         File image_file = new File(folder, fileName);
         return image_file;
     }
+
 }
