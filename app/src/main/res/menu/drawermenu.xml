@@ -2,18 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:id="@+id/group_My_Profile" android:title="Ich">
-            <item android:title="Likes"
-                android:id="@+id/nav_item_likes" />
-
+            <item android:title="Eigene"
+                android:id="@+id/nav_item_own" />
+<!--
             <item android:title="Kommentare"
                 android:id="@+id/nav_item_comments" />
 
             <item android:title="Uploads"
                 android:id="@+id/nav_item_uploads" />
+-->
     </group>
 
     <group android:id="@+id/group_settings_id">
-        <item android:title="Einstellungen" />
-        <item android:title="Hilfe" />
+        <item android:title="Einstellungen"
+            android:id="@+id/nav_item_settings" />
+        <item android:title="Hilfe"
+            android:id="@+id/nav_item_help" />
     </group>
 </menu>

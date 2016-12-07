@@ -1,16 +1,22 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.*;
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
@@ -22,6 +28,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,9 +48,6 @@ public class MainActivity extends AppCompatActivity{
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
-    private Bitmap gaelrieBitmap;
-    private InputStream galerieInputStream;
-    private String galerieString;
     public File folder;
     private Uri photoUri;
     private Uri galerieUri;
@@ -55,6 +59,29 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //ein LocationMAnager wird initialisiert
+        //wenn die Erlaubnis zur Location-Nutzung in den Einstellungen noch nicht erteilt wurde, wird der User mit einem PopUp so lange darauf hingewiesen bis er das ändert
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            PopUp popup =new PopUp();
+            popup.PopUp(MainActivity.this, "Erlaubnis zur GPS-Nutzung fehlt", "Bitte Berechtigung zur Standorterkennung für PixYel in den Einstellungen im Andwendungsmanager geben");
+            return;
+        }
+        //wenn es einen NETWORK_PROVIDER gibt soll dieser verwendet werden
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, listener);
+        }
+        //ansonsten soll die Ortung über GPS_PROVIDER erfolgen
+        else {locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, listener);
+        }
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            PopUp popup =new PopUp();
+            popup.PopUp(MainActivity.this, "Erlaubnis für Speicherzugriff oder Kamera fehlen", "Bitte Berechtigung für PixYel in den Einstellungen im Andwendungsmanager geben");
+            return;
+        }
         /**
          *Setup the DrawerLayout and NavigationView
          */
@@ -74,21 +101,35 @@ public class MainActivity extends AppCompatActivity{
          * Setup click events on the Navigation View Items.
          */
 
+        /** Menüpunkte */
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                mDrawerLayout.closeDrawers();
+            mDrawerLayout.closeDrawers();
+
+            /** Eigene Uploads und Likes. Comments bei Bedarf in "TabFragmentOwn.java" anlegen */
+            if (menuItem.getItemId() == R.id.nav_item_own){
+                //Log.d("test","test");
+                Intent intent = new Intent(MainActivity.this, OwnActivity.class);
+                startActivity(intent);
+            }
+
+            /** Einstellungen */
+            if (menuItem.getItemId() == R.id.nav_item_settings){
+                //Log.d("test","test");
+                Intent intent = new Intent(MainActivity.this, Settings.class);
+                startActivity(intent);
+            }
+
+            /** Hilfe & Impressum */
+            if (menuItem.getItemId() == R.id.nav_item_help){
+                //Log.d("test","test");
+                Intent intent = new Intent(MainActivity.this, TestActivity.class);  // TODO: Help.java anlegen
+                startActivity(intent);
+            }
 
 
-
-                if (menuItem.getItemId() == R.id.nav_item_likes){
-                    Log.d("test","test");
-                    Intent intent = new Intent(MainActivity.this, TestActivity.class);
-                    startActivity(intent);
-                }
-
-
-                return false;
+            return false;
             }
 
         });
@@ -131,6 +172,7 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(intent, UPLOAD_PICTURE);
             }
         });
+
     }
 
     @Override
@@ -160,4 +202,8 @@ public class MainActivity extends AppCompatActivity{
         return image_file;
     }
 
+    public void ImageClick(View view){
+        Intent intent = new Intent(MainActivity.this, activity_BigPicture.class);
+        startActivity(intent);
+    }
 }
