@@ -131,6 +131,29 @@ public class ConnectionManager implements Runnable{
         }
     }
 
+    public static boolean sendToServerUnencrypted(XML toSend) {
+        try {
+            String ready = XML.createNewXML("request").addChild(toSend).toString();
+            PrintWriter raus = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+            raus.println(ready);
+            raus.flush();
+            System.out.println("Erfolgreich \"" + toSend + "\" gesendet!");
+            return true;
+        } catch (Exception e) {
+            if (e.toString().contains("Socket is closed")) {
+                System.err.println("Could not send String beacuase the socket is closed, closing the connection now: " + e);
+                disconnect();
+                return false;
+            } else if (e.toString().contains("socket write error")) {
+                System.err.println("Could not write on Socket: " + e);
+                return false;
+            } else {
+                System.err.println("String(" + toSend + ") could not be send: " + e);
+                return false;
+            }
+        }
+    }
+
     @Override
     public void run() {
         this.connect("Jan");
@@ -182,6 +205,9 @@ public class ConnectionManager implements Runnable{
     }
 
     private static String onStringReceived(String string) {
+        if(string == null){
+            return null;
+        }
         if (string.contains("echo")) {
             System.out.println("Nachricht vom Server: " + string);
             return string;
