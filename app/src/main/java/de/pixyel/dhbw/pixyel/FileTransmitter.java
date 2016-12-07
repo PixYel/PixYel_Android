@@ -43,7 +43,7 @@ public class FileTransmitter {
         xml.getFirstChild("lat").setContent("23452345");
 
         System.out.println("Bild: "+imageString);
-        ConnectionManager.sendToServer(xml);
+        ConnectionManager.sendToServerUnencrypted(xml);
         System.out.println("Gesendet");
     }
 }
