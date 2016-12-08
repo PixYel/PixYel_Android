@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/group_My_Profile" android:title="Ich">
+    <group>
             <item android:title="Eigene"
                 android:id="@+id/nav_item_own" />
-<!--
-            <item android:title="Kommentare"
-                android:id="@+id/nav_item_comments" />
-
-            <item android:title="Uploads"
-                android:id="@+id/nav_item_uploads" />
--->
     </group>
-
-    <group android:id="@+id/group_settings_id">
+    <group>
         <item android:title="Einstellungen"
             android:id="@+id/nav_item_settings" />
-        <item android:title="Hilfe"
+        <item android:title="Hilfe &amp; Impressum"
             android:id="@+id/nav_item_help" />
     </group>
 </menu>

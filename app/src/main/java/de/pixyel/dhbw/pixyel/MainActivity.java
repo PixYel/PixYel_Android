@@ -56,55 +56,55 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
 
-        LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //ein LocationMAnager wird initialisiert
-        //wenn die Erlaubnis zur Location-Nutzung in den Einstellungen noch nicht erteilt wurde, wird der User mit einem PopUp so lange darauf hingewiesen bis er das ändert
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            PopUp popup =new PopUp();
-            popup.PopUp(MainActivity.this, "Erlaubnis zur GPS-Nutzung fehlt", "Bitte Berechtigung zur Standorterkennung für PixYel in den Einstellungen im Andwendungsmanager geben");
-            return;
-        }
-        //wenn es einen NETWORK_PROVIDER gibt soll dieser verwendet werden
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, listener);
-        }
-        //ansonsten soll die Ortung über GPS_PROVIDER erfolgen
-        else {locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, listener);
-        }
+    LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
+    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //ein LocationMAnager wird initialisiert
+    //wenn die Erlaubnis zur Location-Nutzung in den Einstellungen noch nicht erteilt wurde, wird der User mit einem PopUp so lange darauf hingewiesen bis er das ändert
+    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        PopUp popup =new PopUp();
+        popup.PopUp(MainActivity.this, "Erlaubnis zur GPS-Nutzung fehlt", "Bitte Berechtigung zur Standorterkennung für PixYel in den Einstellungen im Andwendungsmanager geben");
+        return;
+    }
+    //wenn es einen NETWORK_PROVIDER gibt soll dieser verwendet werden
+    if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, listener);
+    }
+    //ansonsten soll die Ortung über GPS_PROVIDER erfolgen
+    else {locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, listener);
+    }
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            PopUp popup =new PopUp();
-            popup.PopUp(MainActivity.this, "Erlaubnis für Speicherzugriff oder Kamera fehlen", "Bitte Berechtigung für PixYel in den Einstellungen im Andwendungsmanager geben");
-            return;
-        }
-        /**
-         *Setup the DrawerLayout and NavigationView
-         */
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        PopUp popup =new PopUp();
+        popup.PopUp(MainActivity.this, "Erlaubnis für Speicherzugriff oder Kamera fehlen", "Bitte Berechtigung für PixYel in den Einstellungen im Andwendungsmanager geben");
+        return;
+    }
+    /**
+     *Setup the DrawerLayout and NavigationView
+     */
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mNavigationView = (NavigationView) findViewById(R.id.drawer) ;
+    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+    mNavigationView = (NavigationView) findViewById(R.id.drawer) ;
 
-        /**
-         * Lets inflate the very first fragment
-         * Here , we are inflating the TabFragment as the first Fragment
-         */
+    /**
+     * Lets inflate the very first fragment
+     * Here , we are inflating the TabFragment as the first Fragment
+     */
 
-        mFragmentManager = getSupportFragmentManager();
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        mFragmentTransaction.replace(R.id.containerView,new TabFragment()).commit();
-        /**
-         * Setup click events on the Navigation View Items.
-         */
+    mFragmentManager = getSupportFragmentManager();
+    mFragmentTransaction = mFragmentManager.beginTransaction();
+    mFragmentTransaction.replace(R.id.containerView,new TabFragment()).commit();
+    /**
+     * Setup click events on the Navigation View Items.
+     */
 
-        /** Menüpunkte */
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+    /** Menüpunkte */
+    mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem menuItem) {
             mDrawerLayout.closeDrawers();
 
             /** Eigene Uploads und Likes. Comments bei Bedarf in "TabFragmentOwn.java" anlegen */
@@ -124,86 +124,87 @@ public class MainActivity extends AppCompatActivity{
             /** Hilfe & Impressum */
             if (menuItem.getItemId() == R.id.nav_item_help){
                 //Log.d("test","test");
-                Intent intent = new Intent(MainActivity.this, TestActivity.class);  // TODO: Help.java anlegen
+                Intent intent = new Intent(MainActivity.this, Help.class);
                 startActivity(intent);
             }
 
 
             return false;
-            }
+        }
 
-        });
+    });
 
-        /**
-         * Setup Drawer Toggle of the Toolbar
-         */
-
-
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name,
-                R.string.app_name);
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        mDrawerToggle.syncState();
-
-        // Connection to Server
-        Executors.newFixedThreadPool(1).submit(new ConnectionManager());
+    /**
+     * Setup Drawer Toggle of the Toolbar
+     */
 
 
+    android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+    ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar,R.string.app_name,
+            R.string.app_name);
 
-        final ImageButton pictures = (ImageButton) findViewById(R.id.pictures);
-        pictures.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                String fileName = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
-                folder = getFile(fileName);
-                photoUri = Uri.fromFile(folder);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(intent, TAKE_PICTURE);
-            }
-        });
+    mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        final ImageButton upload = (ImageButton) findViewById(R.id.upload);
-        upload.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, UPLOAD_PICTURE);
-            }
-        });
+    mDrawerToggle.syncState();
+
+    // Connection to Server
+    Executors.newFixedThreadPool(1).submit(new ConnectionManager());
+
+
+
+    final ImageButton pictures = (ImageButton) findViewById(R.id.pictures);
+    pictures.setOnClickListener(new View.OnClickListener(){
+        public void onClick(View view){
+            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+            String fileName = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+            folder = getFile(fileName);
+            photoUri = Uri.fromFile(folder);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(intent, TAKE_PICTURE);
+        }
+    });
+
+    final ImageButton upload = (ImageButton) findViewById(R.id.upload);
+    upload.setOnClickListener(new View.OnClickListener(){
+        public void onClick(View view){
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, UPLOAD_PICTURE);
+        }
+    });
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (resultCode == RESULT_OK) {
-            // Make sure the request was successful
-            if (requestCode == TAKE_PICTURE) {
-                FileTransmitter.send(folder);
-                NewFragment.addPhoto(photoUri);
-            }
-            else if (requestCode == UPLOAD_PICTURE){
-                galerieUri = data.getData();
-                NewFragment.addPhoto(galerieUri);
-            }
+    // Check which request we're responding to
+    if (resultCode == RESULT_OK) {
+        // Make sure the request was successful
+        if (requestCode == TAKE_PICTURE) {
+            FileTransmitter.send(folder);
+            NewFragment.addPhoto(photoUri);
         }
+        else if (requestCode == UPLOAD_PICTURE){
+            galerieUri = data.getData();
+            NewFragment.addPhoto(galerieUri);
+        }
+    }
     }
 
     public File getFile(String fileName){
-        File folder = new File("sdcard/DCIM/PixYel");
+    File folder = new File("sdcard/DCIM/PixYel");
 
-        if (!folder.exists()){
-            folder.mkdir();
-        }
+    if (!folder.exists()){
+        folder.mkdir();
+    }
 
-        File image_file = new File(folder, fileName);
-        return image_file;
+    File image_file = new File(folder, fileName);
+    return image_file;
     }
 
     public void ImageClick(View view){
-        Intent intent = new Intent(MainActivity.this, activity_BigPicture.class);
-        startActivity(intent);
+    Intent intent = new Intent(MainActivity.this, activity_BigPicture.class);
+    startActivity(intent);
     }
 }
+
