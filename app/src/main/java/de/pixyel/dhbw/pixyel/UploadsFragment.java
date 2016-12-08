@@ -43,9 +43,14 @@ public class UploadsFragment extends Fragment {
         //System.out.println("Bytes:" + image.getByteCount());
         //imgByte = stream.toByteArray();
 
+        File folder = new File("sdcard/DCIM/PixYel");
+        File[] listOfFiles = folder.listFiles();
 
-        //imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
-
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
+            }
+        }
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         // use this setting to improve performance if you know that changes
@@ -70,7 +75,7 @@ public class UploadsFragment extends Fragment {
     }
 
     public static void refreshItems(){
-
+        imageList.clear();
         File folder = new File("sdcard/DCIM/PixYel");
         File[] listOfFiles = folder.listFiles();
 
