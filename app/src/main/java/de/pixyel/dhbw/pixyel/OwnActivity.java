@@ -31,4 +31,8 @@ public class OwnActivity extends AppCompatActivity {
         });
     }
 
+    public void ImageClick(View view){
+        Intent intent = new Intent(OwnActivity.this, activity_BigPicture.class);
+        startActivity(intent);
+    }
 }
