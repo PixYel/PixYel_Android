@@ -11,18 +11,31 @@ import android.os.Bundle;
 
 public class MyLocationListener implements LocationListener{
 
-    double latitude;
-    double longitude;
+    public static double latitude;
+    public static double longitude;
     Context context;
 
     public MyLocationListener( Context context){
         this.context=context;
     }
 
+    //liefert den Breitengrad als String zurück
+    public static String getLati(){
+        String lati= String.valueOf(latitude);
+        return lati;
+    }
+    //liefert den Längengrad als String zurück
+    public static String getLongi(){
+        String longi= String.valueOf(longitude);
+        return longi;
+    }
+
     @Override // wenn sich die Position verändert hat
     public void onLocationChanged(Location location) {
         latitude= location.getLatitude();
         longitude= location.getLongitude();
+        getLati();
+        getLongi();
     }
 
     @Override

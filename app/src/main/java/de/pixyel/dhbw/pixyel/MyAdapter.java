@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.LinkedList;
 
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
 import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
@@ -68,9 +69,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
             public void onClick(View v) {
                 holder.mLikes.setText("tschüss");
                 XML vote = XML.createNewXML("request").addChild("vote");
-                vote.addChild("id").setContent("BildID");
+                vote.addChild("id").setContent("Picture.id");
                 vote.addChild("upvote").setContent("1");
                 String s = vote.toString();
+                System.out.println(s);
+                ConnectionManager.sendToServer(vote);
 
             }
         });
@@ -80,9 +83,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
             public void onClick(View v) {
                 holder.mLikes.setText("hallo");
                 XML vote = XML.createNewXML("request").addChild("vote");
-                vote.addChild("id").setContent("BildID");
+                vote.addChild("id").setContent("Picture.id");
                 vote.addChild("upvote").setContent("-1");
                 String s = vote.toString();
+                ConnectionManager.sendToServer(vote);
             }
         });
 

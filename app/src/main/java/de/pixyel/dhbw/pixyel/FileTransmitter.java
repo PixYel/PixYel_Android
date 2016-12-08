@@ -35,12 +35,14 @@ public class FileTransmitter {
             e.printStackTrace();
         }
 
+        String longitude= MyLocationListener.getLongi();
+        String latitude = MyLocationListener.getLati();
         imageString = Base64.encodeToString(bytes, Base64.NO_WRAP);
         XML xml = XML.createNewXML("upload");
         xml.addChildren("data","long","lat");
         xml.getFirstChild("data").setContent(imageString);
-        xml.getFirstChild("long").setContent("2345");
-        xml.getFirstChild("lat").setContent("23452345");
+        xml.getFirstChild("long").setContent(longitude);
+        xml.getFirstChild("lat").setContent(latitude);
 
         System.out.println("Bild: "+imageString);
         ConnectionManager.sendToServerUnencrypted(xml);
