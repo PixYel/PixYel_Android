@@ -67,7 +67,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
         holder.mUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                holder.mLikes.setText("tschüss");
                 XML vote = XML.createNewXML("request").addChild("vote");
                 vote.addChild("id").setContent("Picture.id");
                 vote.addChild("upvote").setContent("1");
@@ -81,7 +80,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
         holder.mDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.mLikes.setText("hallo");
                 XML vote = XML.createNewXML("request").addChild("vote");
                 vote.addChild("id").setContent("Picture.id");
                 vote.addChild("upvote").setContent("-1");
