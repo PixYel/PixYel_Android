@@ -13,11 +13,15 @@ import java.util.Date;
 public class ImageCard {
     int likes;
     int dislikes;
+    int id;
+    byte[] image;
     String url;
 
     ImageCard(String url){
         this.url = url;
     }
+
+    ImageCard(byte[] image){ this.image = image;}
 
     public void like(){
         this.likes++;
