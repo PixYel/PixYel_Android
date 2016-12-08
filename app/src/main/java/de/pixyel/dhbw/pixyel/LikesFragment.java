@@ -80,6 +80,6 @@ public class LikesFragment extends Fragment {
 
     public static void addPhoto(Uri uri){
         imageList.add(new ImageCard(uri.toString()));
-        onItemsLoadComplete();
+      onItemsLoadComplete();
     }
 }

@@ -5,6 +5,6 @@ package de.pixyel.dhbw.pixyel;
  */
 
 public class PicComment {
-    String comment;
+    String pic_comment;
 
 }
