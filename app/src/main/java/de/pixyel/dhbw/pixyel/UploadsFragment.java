@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.LinkedList;
 
 public class UploadsFragment extends Fragment {
@@ -43,7 +44,7 @@ public class UploadsFragment extends Fragment {
         //imgByte = stream.toByteArray();
 
 
-        imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
+        //imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
@@ -69,8 +70,16 @@ public class UploadsFragment extends Fragment {
     }
 
     public static void refreshItems(){
-        imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
-        onItemsLoadComplete();
+
+        File folder = new File("sdcard/DCIM/PixYel");
+        File[] listOfFiles = folder.listFiles();
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
+            }
+            onItemsLoadComplete();
+        }
     }
 
     public static void onItemsLoadComplete(){
@@ -78,8 +87,4 @@ public class UploadsFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    public static void addPhoto(Uri uri){
-        imageList.add(new ImageCard(uri.toString()));
-        onItemsLoadComplete();
-    }
 }
