@@ -1,6 +1,13 @@
 package de.pixyel.dhbw.pixyel.ConnectionManager;
 
+import android.text.TextUtils;
+import android.util.Base64;
+
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -8,6 +15,8 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class ConnectionManager implements Runnable{
@@ -18,6 +27,8 @@ public class ConnectionManager implements Runnable{
     private static String serverPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmG8OfhJrkN9/rXLh7auyUPcq7UxmYModYswChY8hIMgZO4m+cxOWopxOptUAYedjA4ZAKGp/P1g6n6YaXvtPQqIbi7G5oCT4vbh0zYFgI3wNCJlKtUX1gb6uCQW3rPinANcPtlZoIyegAsn/OW0FMZtc1x8PN0H1MQTlcCctXdJdotuljeYriO1lkRfb3GsotLIYjciMqIMKGQRQ2Rhj81bnxP9FybdNuVIjlS6Rfx9fzaZ2BKIdm7O7/Dzn9TcSZEOZdOSS7CHMMKr14O26g+bR2HiGWx8AbOH2zP3DMpR9/Y8GUrjO6QPqA+GorICGYWxIlrcm4iYx8740FsDaQQIDAQAB";
     //Der private Key des Clients
     private static String clientPrivateKey;
+
+    public static Queue<Object> sendQueue = new LinkedList<Object>();
 
 
     public static void ping() {
@@ -105,6 +116,7 @@ public class ConnectionManager implements Runnable{
 
     public static boolean sendToServer(XML toSend) {
         try {
+
             String ready = XML.createNewXML("request").addChild(toSend).toString();
             String encrypted = Encryption.encrypt(ready, serverPublicKey);
             System.out.println("Encrypted 1: \"" + encrypted + "\" ===========================================!");
@@ -208,8 +220,33 @@ public class ConnectionManager implements Runnable{
         if(string == null){
             return null;
         }
-        if (string.contains("echo")) {
+        /*if (string.contains("echo")) {
             System.out.println("Nachricht vom Server: " + string);
+            return string;
+        }*/
+        if(string.startsWith("<reply>")){
+            System.out.println(string);
+            try {
+                XML xml = XML.openXML(string);
+                String sData = xml.getFirstChild("setItem").getFirstChild("data").getContent();
+                byte[] bData = Base64.decode(sData, Base64.NO_WRAP);
+                File folder = new File("sdcard/DCIM/PixYel");
+                File image = new File(folder, "Test.jpg");
+                BufferedOutputStream bos = null;
+                try {
+                    bos = new BufferedOutputStream(new FileOutputStream(image));
+                    bos.write(bData);
+                    bos.flush();
+                    bos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (XML.XMLException e) {
+                e.printStackTrace();
+            }
             return string;
         }
         //Decomprimiere den String

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group>
+    <group android:id="@+id/group_My_Profile" android:title="Ich">
             <item android:title="Eigene"
                 android:id="@+id/nav_item_own" />
     </group>
-    <group>
+    <group android:id="@+id/group_settings_id">
         <item android:title="Einstellungen"
             android:id="@+id/nav_item_settings" />
         <item android:title="Hilfe &amp; Impressum"

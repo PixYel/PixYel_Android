@@ -24,7 +24,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".TestActivity" />
-        <activity android:name=".activity_BigPicture"></activity>
+        <activity android:name=".OwnActivity" />
+        <activity android:name=".Help" />
+        <activity android:name=".Settings" />
+        <activity android:name=".activity_BigPicture" />
     </application>
 
 </manifest>
