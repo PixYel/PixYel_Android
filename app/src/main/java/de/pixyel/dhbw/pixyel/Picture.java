@@ -20,4 +20,14 @@ public class Picture {
     public URI pic_path;
     ArrayList<PicComment> picturecomments;
 
+    public Picture(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
+        this.pic_id = id;
+        this.pic_upvotes = upvotes;
+        this.pic_downvotes = downvotes;
+        this.pic_date = date;
+        this.pic_votedByUser = votedByUser;
+        this.pic_rank = rank;
+
+    }
+
 }

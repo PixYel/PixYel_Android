@@ -32,6 +32,7 @@ public class TopFragment extends Fragment {
     private static byte[] imgByte;
 
     public static LinkedList<ImageCard> imageList;
+    public static LinkedList<Picture> pictureList;
 
     @Nullable
     @Override
@@ -76,9 +77,14 @@ public class TopFragment extends Fragment {
     }
 
     public static void refreshItems(){
-        XML xml = XML.createNewXML("getItem");
-        xml.addChildren("id");
-        xml.getFirstChild("id").setContent("1");
+        String longitude= MyLocationListener.getLongi();
+        String latitude = MyLocationListener.getLati();
+        XML xml = XML.createNewXML("getItemList");
+        xml.addChildren("location");
+        xml.getFirstChild("location").addChildren("long","lat");
+        xml.getFirstChild("location").getFirstChild(longitude).setContent("123");
+        xml.getFirstChild("location").getFirstChild(latitude).setContent("123");
+        MainActivity.requestFlag = "Top";
         ConnectionManager.sendToServer(xml);
         onItemsLoadComplete();
     }
@@ -90,6 +96,16 @@ public class TopFragment extends Fragment {
 
     public static void addPhoto(Uri uri){
         imageList.add(new ImageCard(uri.toString()));
+        onItemsLoadComplete();
+    }
+
+    public static void addPhoto(String uri){
+        imageList.add(new ImageCard(uri));
+        onItemsLoadComplete();
+    }
+
+    public static void addPhoto(byte[] bitmap){
+        imageList.add(new ImageCard(bitmap));
         onItemsLoadComplete();
     }
 

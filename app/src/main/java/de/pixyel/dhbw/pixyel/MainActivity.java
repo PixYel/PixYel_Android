@@ -2,6 +2,7 @@ package de.pixyel.dhbw.pixyel;
 
 import android.*;
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity{
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
+    public static String requestFlag = "";
+    public static Context context;
+    public static Activity activity;
+
     public File folder;
     private Uri photoUri;
     private Uri galerieUri;
@@ -56,12 +61,15 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        MainActivity.context = getApplicationContext();
+        MainActivity.activity = this;
 
 
-    LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
-    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //ein LocationMAnager wird initialisiert
+        LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //ein LocationMAnager wird initialisiert
     //wenn die Erlaubnis zur Location-Nutzung in den Einstellungen noch nicht erteilt wurde, wird der User mit einem PopUp so lange darauf hingewiesen bis er das ändert
     if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         PopUp popup =new PopUp();
