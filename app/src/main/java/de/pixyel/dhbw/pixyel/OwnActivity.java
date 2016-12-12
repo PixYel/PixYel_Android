@@ -71,6 +71,22 @@ public class OwnActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (resultCode == RESULT_OK) {
+            // Make sure the request was successful
+            if (requestCode == TAKE_PICTURE) {
+                FileTransmitter.send(folder);
+                NewFragment.addPhoto(photoUri);
+            }
+            else if (requestCode == UPLOAD_PICTURE){
+                galerieUri = data.getData();
+                NewFragment.addPhoto(galerieUri);
+            }
+        }
+    }
+
     public File getFile(String fileName){
         File folder = new File("sdcard/DCIM/PixYel");
 
