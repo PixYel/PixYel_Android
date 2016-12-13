@@ -60,7 +60,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     public void onBindViewHolder(final CardViewHolder holder, int index) {
 
         Glide.with(mActivity).load(mDataset.get(index).pic_url).into(holder.mImage);
-        holder.mLikes.setText("hallo");
+        String Likes= ""+(Integer.valueOf(mDataset.get(index).pic_upvotes) - Integer.valueOf(mDataset.get(index).pic_downvotes));
+        holder.mLikes.setText("Likes: " + Likes);
+        final String ID = mDataset.get(index).pic_id;
 
 
         //setzt den upvoteknopf auf clicklistener
@@ -68,7 +70,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
             @Override
             public void onClick(View v) {
                 XML vote = XML.createNewXML("request").addChild("vote");
-                vote.addChild("id").setContent("Picture.id");
+                vote.addChild("id").setContent(ID);
                 vote.addChild("upvote").setContent("1");
                 String s = vote.toString();
                 System.out.println(s);
@@ -80,13 +82,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
         holder.mDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 XML vote = XML.createNewXML("request").addChild("vote");
-                vote.addChild("id").setContent("Picture.id");
+                vote.addChild("id").setContent(ID);
                 vote.addChild("upvote").setContent("-1");
                 String s = vote.toString();
                 ConnectionManager.sendToServer(vote);
             }
         });
+
 
 
     }

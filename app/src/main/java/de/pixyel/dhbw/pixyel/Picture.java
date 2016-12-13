@@ -18,7 +18,7 @@ public class Picture {
     public String pic_longitude;
     public String pic_latitude;
     public URI pic_path;
-    ArrayList<PicComment> picturecomments;
+    ArrayList<PicComment> pic_comments;
 
     public Picture(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
         this.pic_id = id;
