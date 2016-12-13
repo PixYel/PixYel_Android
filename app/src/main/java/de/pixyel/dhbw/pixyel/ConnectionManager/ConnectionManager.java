@@ -15,8 +15,13 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import de.pixyel.dhbw.pixyel.MainActivity;
+import de.pixyel.dhbw.pixyel.Picture;
+import de.pixyel.dhbw.pixyel.TopFragment;
 
 
 public class ConnectionManager implements Runnable{
@@ -228,10 +233,33 @@ public class ConnectionManager implements Runnable{
             System.out.println(string);
             try {
                 XML xml = XML.openXML(string);
+
+                if(xml.getFirstChild().toString().contains("setItemList")){
+                    xml = xml.getFirstChild("setItemList");
+                    ArrayList<XML> list = new ArrayList<XML>();
+                    list = xml.getChild("setItem");
+
+                    if(MainActivity.requestFlag.contains("Top")){
+                        for(XML item: list){
+                            TopFragment.pictureList.add(new Picture(
+                                    item.getFirstChild("id").getContent().toString(),
+                                    item.getFirstChild("date").getContent().toString(),
+                                    item.getFirstChild("upvotes").getContent().toString(),
+                                    item.getFirstChild("downvotes").getContent().toString(),
+                                    item.getFirstChild("votedByUser").getContent().toString(),
+                                    item.getFirstChild("rank").getContent().toString()
+                            ));
+                            System.out.println(item.toString());
+                        }
+                    }
+                }
+
+/*
+
                 String sData = xml.getFirstChild("setItem").getFirstChild("data").getContent();
                 byte[] bData = Base64.decode(sData, Base64.NO_WRAP);
                 File folder = new File("sdcard/DCIM/PixYel");
-                File image = new File(folder, "Test.jpg");
+                final File image = new File(folder, "Test.jpg");
                 BufferedOutputStream bos = null;
                 try {
                     bos = new BufferedOutputStream(new FileOutputStream(image));
@@ -243,7 +271,16 @@ public class ConnectionManager implements Runnable{
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+                String flag = MainActivity.requestFlag;
+                if(flag.contains("Top")){
+                    MainActivity.activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            TopFragment.addPhoto(image.toString());
+                        }
+                    });
+                }
+*/
             } catch (XML.XMLException e) {
                 e.printStackTrace();
             }
