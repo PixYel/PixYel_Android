@@ -82,6 +82,7 @@ public class OwnActivity extends AppCompatActivity {
             }
             else if (requestCode == UPLOAD_PICTURE){
                 galerieUri = data.getData();
+                FileTransmitter.send(folder);
                 NewFragment.addPhoto(galerieUri);
             }
         }

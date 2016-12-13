@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity{
             }
             else if (requestCode == UPLOAD_PICTURE){
                 galerieUri = data.getData();
+                FileTransmitter.send(folder);
                 NewFragment.addPhoto(galerieUri);
             }
         }

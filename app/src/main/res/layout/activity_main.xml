@@ -37,16 +37,6 @@
             android:layout_gravity="end"
             android:minWidth="25pt" />
 
-        <android.support.v7.widget.AppCompatImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/refresh"
-            app:srcCompat="@drawable/ic_autorenew_white_36dp"
-            android:tint="@color/white"
-            android:background="@color/colorPrimary"
-            android:layout_gravity="end"
-            android:minWidth="20pt" />
-
     </android.support.v7.widget.Toolbar>
 
     <android.support.v4.widget.DrawerLayout
