@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">PixYel</string>
+    <string name="credits">
+        <b>PixYel\n</b>
+        <u>Created by:\n</u>
+        Dan-Pierre Drehlich\n
+        Lisa Hartung\n
+        Stefan Schmid\n
+        Jan Striegel\n
+    </string>
 </resources>
