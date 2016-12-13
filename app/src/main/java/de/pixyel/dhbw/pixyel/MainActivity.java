@@ -2,6 +2,7 @@ package de.pixyel.dhbw.pixyel;
 
 import android.*;
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity{
     private Uri galerieUri;
     private static final int TAKE_PICTURE = 1;
     private static final int UPLOAD_PICTURE = 2;
+
+    public static String requestFlag = "";
+    public static Context context;
+    public static Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
