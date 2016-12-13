@@ -48,7 +48,7 @@ public class UploadsFragment extends Fragment {
 
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
-                imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
+               imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
             }
         }
 
@@ -81,7 +81,7 @@ public class UploadsFragment extends Fragment {
 
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
-                imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
+              imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
             }
             onItemsLoadComplete();
         }

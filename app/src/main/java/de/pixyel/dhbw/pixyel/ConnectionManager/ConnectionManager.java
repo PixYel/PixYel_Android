@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import de.pixyel.dhbw.pixyel.ImageCard;
 import de.pixyel.dhbw.pixyel.MainActivity;
 import de.pixyel.dhbw.pixyel.Picture;
 import de.pixyel.dhbw.pixyel.TopFragment;
@@ -263,7 +264,8 @@ public class ConnectionManager implements Runnable {
                 MainActivity.activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        TopFragment.addPhoto(image.toString());
+                        //TopFragment.addPhoto(image.toString());
+                        TopFragment.onItemsLoadComplete();
                     }
                 });
             }
@@ -293,7 +295,7 @@ public class ConnectionManager implements Runnable {
                             System.out.println("hallo");
                             XML item;
                             item = list.get(i);
-                            TopFragment.pictureList.add(new Picture(
+                            TopFragment.imageList.add(new ImageCard(
                                     item.getFirstChild("id").getContent(),
                                     item.getFirstChild("date").getContent(),
                                     item.getFirstChild("upvotes").getContent(),

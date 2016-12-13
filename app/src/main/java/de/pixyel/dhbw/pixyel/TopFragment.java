@@ -94,19 +94,10 @@ public class TopFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    public static void addPhoto(Uri uri){
-        imageList.add(new ImageCard(uri.toString()));
+    public static void addPhoto(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
+        imageList.add(new ImageCard(id, date, upvotes, downvotes, votedByUser, rank));
         onItemsLoadComplete();
     }
 
-    public static void addPhoto(String uri){
-        imageList.add(new ImageCard(uri));
-        onItemsLoadComplete();
-    }
-
-    public static void addPhoto(byte[] bitmap){
-        imageList.add(new ImageCard(bitmap));
-        onItemsLoadComplete();
-    }
 
 }

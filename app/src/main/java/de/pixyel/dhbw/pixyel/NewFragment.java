@@ -46,8 +46,6 @@ public class NewFragment extends Fragment {
         //imgByte = stream.toByteArray();
 
 
-        imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
-
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         // use this setting to improve performance if you know that changes
@@ -72,7 +70,7 @@ public class NewFragment extends Fragment {
     }
 
     public static void refreshItems(){
-        imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
+
         onItemsLoadComplete();
     }
 
@@ -82,7 +80,7 @@ public class NewFragment extends Fragment {
     }
 
     public static void addPhoto(Uri uri){
-        imageList.add(new ImageCard(uri.toString()));
+
         onItemsLoadComplete();
     }
 

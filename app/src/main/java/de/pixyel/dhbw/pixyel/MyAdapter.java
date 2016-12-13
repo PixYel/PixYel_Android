@@ -59,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     @Override
     public void onBindViewHolder(final CardViewHolder holder, int index) {
 
-        Glide.with(mActivity).load(mDataset.get(index).url).into(holder.mImage);
+        Glide.with(mActivity).load(mDataset.get(index).pic_url).into(holder.mImage);
         holder.mLikes.setText("hallo");
 
 

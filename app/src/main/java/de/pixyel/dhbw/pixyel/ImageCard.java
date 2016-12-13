@@ -11,28 +11,25 @@ import java.util.Date;
  */
 
 public class ImageCard {
-    int likes;
-    int dislikes;
-    int id;
-    byte[] image;
-    String url;
+    public String pic_id;
+    public String pic_date;
+    public String pic_upvotes;
+    public String pic_downvotes;
+    public String pic_votedByUser;
+    public String pic_rank;
+    public String pic_url;
 
-    ImageCard(String url){
-        this.url = url;
+    public ImageCard(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
+        this.pic_id = id;
+        this.pic_upvotes = upvotes;
+        this.pic_downvotes = downvotes;
+        this.pic_date = date;
+        this.pic_votedByUser = votedByUser;
+        this.pic_rank = rank;
+        this.pic_url = "sdcard/DCIM/PixYel/" + pic_id + ".jpg";
+
     }
-
-    ImageCard(byte[] image){ this.image = image;}
-
-    public void like(){
-        this.likes++;
+    public ImageCard(String url){
+        this.pic_url = url;
     }
-
-    public void dislike(){
-        this.dislikes++;
-    }
-
-    public int getLikes(){
-        return this.likes-this.dislikes;
-    }
-
 }
