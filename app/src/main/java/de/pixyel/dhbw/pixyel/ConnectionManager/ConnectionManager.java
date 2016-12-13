@@ -1,5 +1,7 @@
 package de.pixyel.dhbw.pixyel.ConnectionManager;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -18,6 +20,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
 
 import de.pixyel.dhbw.pixyel.ImageCard;
 import de.pixyel.dhbw.pixyel.MainActivity;
@@ -124,7 +127,7 @@ public class ConnectionManager implements Runnable {
         try {
 
             if(socket.isClosed()){
-                ConnectionManager.connect("123412341234");
+                ConnectionManager.connect(MainActivity.deviceID);
                 return false;
             }
 
@@ -179,7 +182,7 @@ public class ConnectionManager implements Runnable {
 
     @Override
     public void run() {
-        this.connect("1234123412342134213431243212334");
+        this.connect(MainActivity.deviceID);
     }
 
     private static class ServerInputListener implements Runnable {

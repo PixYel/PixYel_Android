@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings.Secure;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +25,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -39,9 +41,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
+
 
 public class MainActivity extends AppCompatActivity{
     DrawerLayout mDrawerLayout;
@@ -58,14 +62,31 @@ public class MainActivity extends AppCompatActivity{
     public static String requestFlag = "";
     public static Context context;
     public static Activity activity;
+    public static String deviceID ="";
+
+
+    public void createDeviceID() {
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+         deviceID = deviceUuid.toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = this;
 
+        createDeviceID();
 
         LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //ein LocationMAnager wird initialisiert
