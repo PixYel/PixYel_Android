@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        activity = this;
 
 
         LocationListener listener = new MyLocationListener(MainActivity.this); //ein neuer LocationListener wird erstellt
