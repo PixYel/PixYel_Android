@@ -24,7 +24,7 @@ import de.pixyel.dhbw.pixyel.Picture;
 import de.pixyel.dhbw.pixyel.TopFragment;
 
 
-public class ConnectionManager implements Runnable{
+public class ConnectionManager implements Runnable {
     private static Socket socket;//Der "Kanal" zum Server
     private static ServerInputListener listener;//Ein eigener Thread, der auf eingehende Nachrichten vom Server horcht
     private static String serverIP = "sharknoon.de";//IP-Adresse des Servers, zum testes localhost (Server und Client auf dem selben Computer), wird später "sharknoon.de" sein!
@@ -96,7 +96,7 @@ public class ConnectionManager implements Runnable{
         XML loginXML = XML.createNewXML("login");
         loginXML.addChildren("storeId", "publicKey");
         loginXML.getFirstChild("storeId").setContent(storeID);
-        loginXML.getFirstChild("publicKey").setContent(keyPair[0].replaceAll("\\n",""));
+        loginXML.getFirstChild("publicKey").setContent(keyPair[0].replaceAll("\\n", ""));
         //Übermittle dem Server meinen Public Key
         sendToServer(loginXML);
     }
@@ -121,6 +121,11 @@ public class ConnectionManager implements Runnable{
 
     public static boolean sendToServer(XML toSend) {
         try {
+
+            if(socket.isClosed()){
+                ConnectionManager.connect("123412341234");
+                return false;
+            }
 
             String ready = XML.createNewXML("request").addChild(toSend).toString();
             String encrypted = Encryption.encrypt(ready, serverPublicKey);
@@ -173,7 +178,7 @@ public class ConnectionManager implements Runnable{
 
     @Override
     public void run() {
-        this.connect("Jan");
+        this.connect("1234123412342134213431243212334");
     }
 
     private static class ServerInputListener implements Runnable {
@@ -221,70 +226,48 @@ public class ConnectionManager implements Runnable{
         }
     }
 
-    private static String onStringReceived(String string) {
-        if(string == null){
-            return null;
+    private static void onStringReceived(String string) {
+        if (string == null) {
+            return;
         }
         /*if (string.contains("echo")) {
             System.out.println("Nachricht vom Server: " + string);
             return string;
         }*/
-        if(string.startsWith("<reply>")){
+        if (string.startsWith("<reply>")) {
             System.out.println(string);
+            XML xml = null;
             try {
-                XML xml = XML.openXML(string);
-
-                if(xml.getFirstChild().toString().contains("setItemList")){
-                    xml = xml.getFirstChild("setItemList");
-                    ArrayList<XML> list = new ArrayList<XML>();
-                    list = xml.getChild("setItem");
-
-                    if(MainActivity.requestFlag.contains("Top")){
-                        for(XML item: list){
-                            TopFragment.pictureList.add(new Picture(
-                                    item.getFirstChild("id").getContent().toString(),
-                                    item.getFirstChild("date").getContent().toString(),
-                                    item.getFirstChild("upvotes").getContent().toString(),
-                                    item.getFirstChild("downvotes").getContent().toString(),
-                                    item.getFirstChild("votedByUser").getContent().toString(),
-                                    item.getFirstChild("rank").getContent().toString()
-                            ));
-                            System.out.println(item.toString());
-                        }
-                    }
-                }
-
-/*
-
-                String sData = xml.getFirstChild("setItem").getFirstChild("data").getContent();
-                byte[] bData = Base64.decode(sData, Base64.NO_WRAP);
-                File folder = new File("sdcard/DCIM/PixYel");
-                final File image = new File(folder, "Test.jpg");
-                BufferedOutputStream bos = null;
-                try {
-                    bos = new BufferedOutputStream(new FileOutputStream(image));
-                    bos.write(bData);
-                    bos.flush();
-                    bos.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String flag = MainActivity.requestFlag;
-                if(flag.contains("Top")){
-                    MainActivity.activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TopFragment.addPhoto(image.toString());
-                        }
-                    });
-                }
-*/
+                xml = XML.openXML(string);
             } catch (XML.XMLException e) {
                 e.printStackTrace();
             }
-            return string;
+            String sData = xml.getFirstChild("setItem").getFirstChild("data").getContent();
+            String id = xml.getFirstChild("setItem").getFirstChild("id").getContent();
+            byte[] bData = Base64.decode(sData, Base64.NO_WRAP);
+            File folder = new File("sdcard/DCIM/PixYel");
+            final File image = new File(folder, id+".jpg");
+            BufferedOutputStream bos = null;
+            try {
+                bos = new BufferedOutputStream(new FileOutputStream(image));
+                bos.write(bData);
+                bos.flush();
+                bos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String flag = MainActivity.requestFlag;
+            if(flag.contains("Top")){
+                MainActivity.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TopFragment.addPhoto(image.toString());
+                    }
+                });
+            }
+            return;
         }
         //Decomprimiere den String
         String decrypted = null;
@@ -298,9 +281,42 @@ public class ConnectionManager implements Runnable{
             XML receivedXML = XML.openXML(decrypted);
             //Beispielvorgehen: Zeige den XML Baum in der Ausgabe an
             System.out.println("Command received: \n" + receivedXML.toString());
-            return receivedXML.toString();
-        } catch (Exception e) {
-            return e.toString();
+
+            try {
+                if (receivedXML.getFirstChild().getName().equals("setItemList")) {
+                    receivedXML = receivedXML.getFirstChild("setItemList");
+                    ArrayList<XML> list = receivedXML.getChild("item");
+                    System.out.println("test");
+                    if (MainActivity.requestFlag.contains("Top")) {
+                        System.out.println("test2 top"+list.size());
+                        for (int i = 0; i < list.size(); i++) {
+                            System.out.println("hallo");
+                            XML item;
+                            item = list.get(i);
+                            TopFragment.pictureList.add(new Picture(
+                                    item.getFirstChild("id").getContent(),
+                                    item.getFirstChild("date").getContent(),
+                                    item.getFirstChild("upvotes").getContent(),
+                                    item.getFirstChild("downvotes").getContent(),
+                                    item.getFirstChild("votedByUser").getContent(),
+                                    item.getFirstChild("rank").getContent()
+                            ));
+                            System.out.println(item.toStringGraph());
+                            XML toSend = XML.createNewXML("getItem");
+                            toSend.addChild("id").setContent(item.getFirstChild("id").getContent());
+                            ConnectionManager.sendToServer(toSend);
+                        }
+                    }
+                }
+
+
+                return;
+            } catch (Exception e) {
+                return;
+            }
+        } catch (XML.XMLException e) {
+            e.printStackTrace();
         }
     }
 }
+

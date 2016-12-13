@@ -41,8 +41,8 @@ public class FileTransmitter {
         XML xml = XML.createNewXML("upload");
         xml.addChildren("data","long","lat");
         xml.getFirstChild("data").setContent(imageString);
-        xml.getFirstChild("long").setContent("10");
-        xml.getFirstChild("lat").setContent("47");
+        xml.getFirstChild("long").setContent(longitude);
+        xml.getFirstChild("lat").setContent(latitude);
 
         System.out.println("Bild: "+imageString);
         ConnectionManager.sendToServerUnencrypted(xml);

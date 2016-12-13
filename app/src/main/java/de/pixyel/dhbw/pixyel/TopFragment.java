@@ -1,5 +1,6 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -31,8 +32,8 @@ public class TopFragment extends Fragment {
     private static ByteArrayOutputStream stream;
     private static byte[] imgByte;
 
-    public static LinkedList<ImageCard> imageList;
-    public static LinkedList<Picture> pictureList;
+    public static LinkedList<ImageCard> imageList = new LinkedList<>();
+    public static LinkedList<Picture> pictureList = new LinkedList<>();
 
     @Nullable
     @Override
@@ -51,7 +52,6 @@ public class TopFragment extends Fragment {
         //imgByte = stream.toByteArray();
 
 
-        imageList.add(new ImageCard("http://img.pr0gramm.com/2016/11/09/d4ed7fbd761dcfd9.jpg"));
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
@@ -82,8 +82,8 @@ public class TopFragment extends Fragment {
         XML xml = XML.createNewXML("getItemList");
         xml.addChildren("location");
         xml.getFirstChild("location").addChildren("long","lat");
-        xml.getFirstChild("location").getFirstChild(longitude).setContent("123");
-        xml.getFirstChild("location").getFirstChild(latitude).setContent("123");
+        xml.getFirstChild("location").getFirstChild("long").setContent(longitude);
+        xml.getFirstChild("location").getFirstChild("lat").setContent(latitude);
         MainActivity.requestFlag = "Top";
         ConnectionManager.sendToServer(xml);
         onItemsLoadComplete();
