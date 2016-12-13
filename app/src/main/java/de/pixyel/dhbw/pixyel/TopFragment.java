@@ -77,6 +77,8 @@ public class TopFragment extends Fragment {
     }
 
     public static void refreshItems(){
+        imageList.clear();
+        mAdapter.notifyDataSetChanged();
         String longitude= MyLocationListener.getLongi();
         String latitude = MyLocationListener.getLati();
         XML xml = XML.createNewXML("getItemList");
