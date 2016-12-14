@@ -1,6 +1,7 @@
 package de.pixyel.dhbw.pixyel;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final CardViewHolder holder, int index) {
+    public void onBindViewHolder(final CardViewHolder holder, final int index) {
 
         Glide.with(mActivity).load(mDataset.get(index).pic_url).into(holder.mImage);
         String upvotes = mDataset.get(index).pic_upvotes;
@@ -96,6 +97,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
                 ConnectionManager.sendToServer(vote);
             }
         });
+
+        holder.mImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String uri = mDataset.get(index).pic_url;
+                        Intent intent = new Intent(MainActivity.activity, activity_BigPicture.class);
+                        intent.putExtra(activity_BigPicture.KEY, uri);
+                        MainActivity.activity.startActivity(intent);
+                    }
+                });
+            }
+        });
+
 
 
 

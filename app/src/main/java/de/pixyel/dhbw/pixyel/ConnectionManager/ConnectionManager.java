@@ -232,6 +232,7 @@ public class ConnectionManager implements Runnable {
 
     private static void onStringReceived(String string) {
         if (string == null) {
+            System.out.println("NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL");
             return;
         }
 

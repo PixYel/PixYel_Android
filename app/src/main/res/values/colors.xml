@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#ffc107</color>
     <color name="colorAccent">#FF4081</color>
     <color name="tabsScrollColor">#616161</color>
-    <color name="tabsColor">#BDBDBD</color>
+    <color name="tabsColor">#bdbdbd</color>
 
     <color name="black">#000</color>
     <color name="orange">#FA0</color>

@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity{
         // Connection to Server
         Executors.newFixedThreadPool(1).submit(new ConnectionManager());
 
-
+        // Click on Photo Button, Start Camera
         final ImageButton pictures = (ImageButton) findViewById(R.id.pictures);
         pictures.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
@@ -195,11 +195,14 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+
+        // Click on Upload Button, Starts Galerie
+        // Function: Upload from Galerie to Server
         final ImageButton upload = (ImageButton) findViewById(R.id.upload);
         upload.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
 
                 /** Kopieren nach sdcard/DCIM/PixYel (für eigene Uploads) */
                 String fileName = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
@@ -207,13 +210,14 @@ public class MainActivity extends AppCompatActivity{
                 photoUri = Uri.fromFile(folder);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 
-            startActivityForResult(intent, UPLOAD_PICTURE);
+                startActivityForResult(intent, UPLOAD_PICTURE);
             }
         });
 
         Caching.deleteOldPictures();
     }
 
+    // Get Results
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -224,11 +228,24 @@ public class MainActivity extends AppCompatActivity{
             }
             else if (requestCode == UPLOAD_PICTURE){
                 galerieUri = data.getData();
-                FileTransmitter.send(folder);
+                File file = new File(getRealPathFromURI(galerieUri));
+                FileTransmitter.send(file);
             }
         }
     }
 
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
+
+    // Folder Check
     public File getFile(String fileName){
     File folder = new File("sdcard/DCIM/PixYel");
 
@@ -240,9 +257,5 @@ public class MainActivity extends AppCompatActivity{
         return image_file;
     }
 
-    public void ImageClick(View view){
-        Intent intent = new Intent(MainActivity.this, activity_BigPicture.class);
-        startActivity(intent);
-    }
 }
 
