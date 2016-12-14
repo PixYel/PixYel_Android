@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity{
         cacheFolder = new File(Environment.getExternalStorageDirectory(), "Android/data/de.pixyel.dhbw.pixyel/cache/");
         if (!cacheFolder.exists()){
             System.out.println("create folder");
-            cacheFolder.mkdir();
+            cacheFolder.mkdirs();
         }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
