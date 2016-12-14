@@ -23,11 +23,12 @@ app:layout_scrollFlags="scroll|enterAlways">
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/teilen"
+            android:id="@+id/share"
             app:srcCompat="@drawable/ic_share_variant_white_36dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_gravity="end"
-            android:minWidth="20pt" />
+            android:minWidth="20pt"
+            app:actionProviderClass="android.support.v7.widget.ShareActionProvider"/>
 
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="wrap_content"

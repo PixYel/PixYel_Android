@@ -2,7 +2,6 @@ package de.pixyel.dhbw.pixyel;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -73,6 +72,16 @@ public class activity_BigPicture extends Activity {
             }
         });
 
+        // Sharing the image
+        final ImageButton Share = (ImageButton) findViewById(R.id.share);
+        Share.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("image/jpg");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                startActivity(Intent.createChooser(shareIntent, uri));
+            }
+        });
     }
 
     // Create List View
