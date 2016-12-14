@@ -60,7 +60,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
     public void onBindViewHolder(final CardViewHolder holder, int index) {
 
         Glide.with(mActivity).load(mDataset.get(index).pic_url).into(holder.mImage);
-        String Likes= ""+(Integer.valueOf(mDataset.get(index).pic_upvotes) - Integer.valueOf(mDataset.get(index).pic_downvotes));
+        String upvotes = mDataset.get(index).pic_upvotes;
+        String downvotes = mDataset.get(index).pic_downvotes;
+        String Likes = "0";
+        if (upvotes != null && downvotes != null){
+            Likes= ""+(Integer.valueOf(upvotes) - Integer.valueOf(downvotes));
+        }
         holder.mLikes.setText("Likes: " + Likes);
         final String ID = mDataset.get(index).pic_id;
 
