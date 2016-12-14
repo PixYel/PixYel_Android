@@ -78,12 +78,10 @@ public class OwnActivity extends AppCompatActivity {
             // Make sure the request was successful
             if (requestCode == TAKE_PICTURE) {
                 FileTransmitter.send(folder);
-                NewFragment.addPhoto(photoUri);
             }
             else if (requestCode == UPLOAD_PICTURE){
                 galerieUri = data.getData();
                 FileTransmitter.send(folder);
-                NewFragment.addPhoto(galerieUri);
             }
         }
     }

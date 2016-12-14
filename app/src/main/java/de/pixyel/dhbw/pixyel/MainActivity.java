@@ -15,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings.Secure;
 import android.support.design.widget.NavigationView;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity{
     FragmentTransaction mFragmentTransaction;
 
     public File folder;
+    public static File cacheFolder;
     private Uri photoUri;
     private Uri galerieUri;
     private static final int TAKE_PICTURE = 1;
@@ -110,9 +112,12 @@ public class MainActivity extends AppCompatActivity{
             popup.PopUp(MainActivity.this, "Erlaubnis für Speicherzugriff oder Kamera fehlen", "Bitte Berechtigung für PixYel in den Einstellungen im Andwendungsmanager geben");
             return;
         }
-        /**
-         *Setup the DrawerLayout and NavigationView
-         */
+
+        cacheFolder = new File(Environment.getExternalStorageDirectory(), "Android/data/de.pixyel.dhbw.pixyel/cache/");
+        if (!cacheFolder.exists()){
+            System.out.println("create folder");
+            cacheFolder.mkdir();
+        }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mNavigationView = (NavigationView) findViewById(R.id.drawer) ;
@@ -214,12 +219,10 @@ public class MainActivity extends AppCompatActivity{
             // Make sure the request was successful
             if (requestCode == TAKE_PICTURE) {
                 FileTransmitter.send(folder);
-                NewFragment.addPhoto(photoUri);
             }
             else if (requestCode == UPLOAD_PICTURE){
                 galerieUri = data.getData();
                 FileTransmitter.send(folder);
-                NewFragment.addPhoto(galerieUri);
             }
         }
     }

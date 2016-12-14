@@ -1,5 +1,6 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,6 +17,10 @@ import android.view.ViewGroup;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionListener;
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
+import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
+
 import static android.support.v7.recyclerview.R.styleable.RecyclerView;
 
 public class NewFragment extends Fragment {
@@ -27,7 +32,8 @@ public class NewFragment extends Fragment {
     private static ByteArrayOutputStream stream;
     private static byte[] imgByte;
 
-    public static LinkedList<ImageCard> imageList;
+    public static LinkedList<ImageCard> imageList = new LinkedList<>();
+    public static LinkedList<Picture> pictureList = new LinkedList<>();
 
     @Nullable
     @Override
@@ -47,14 +53,16 @@ public class NewFragment extends Fragment {
 
 
 
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
+        mRecyclerView.setItemViewCacheSize(20);
+        mRecyclerView.setDrawingCacheEnabled(true);
+        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
         mAdapter = new MyAdapter(imageList, getActivity());
         mRecyclerView.setAdapter(mAdapter);
 
@@ -70,7 +78,13 @@ public class NewFragment extends Fragment {
     }
 
     public static void refreshItems(){
-
+        imageList.clear();
+        mAdapter.notifyDataSetChanged();
+        String longitude= MyLocationListener.getLongi();
+        String latitude = MyLocationListener.getLati();
+        XML xml = XML.createNewXML("getItemListByDate");
+        MainActivity.requestFlag = "New";
+        ConnectionManager.sendToServer(xml);
         onItemsLoadComplete();
     }
 
@@ -79,9 +93,14 @@ public class NewFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    public static void addPhoto(Uri uri){
+    public static void refreshItem(int position){
+        mAdapter.notifyItemChanged(position);
+    }
 
+    public static void addPhoto(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
+        imageList.add(new ImageCard(id, date, upvotes, downvotes, votedByUser, rank));
         onItemsLoadComplete();
     }
+
 
 }

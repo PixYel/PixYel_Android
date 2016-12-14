@@ -26,10 +26,12 @@ public class ImageCard {
         this.pic_date = date;
         this.pic_votedByUser = votedByUser;
         this.pic_rank = rank;
-        this.pic_url = "sdcard/DCIM/PixYel/" + pic_id + ".jpg";
+        this.pic_url = MainActivity.cacheFolder.toString() + "/" + pic_id + ".jpg";
+        System.out.println(this.pic_url);
 
     }
     public ImageCard(String url){
         this.pic_url = url;
+
     }
 }

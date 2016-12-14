@@ -58,10 +58,11 @@ public class TopFragment extends Fragment {
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
+        mRecyclerView.setItemViewCacheSize(20);
+        mRecyclerView.setDrawingCacheEnabled(true);
+        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
         mAdapter = new MyAdapter(imageList, getActivity());
         mRecyclerView.setAdapter(mAdapter);
 
@@ -94,6 +95,10 @@ public class TopFragment extends Fragment {
     public static void onItemsLoadComplete(){
         mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public static void refreshItem(int position){
+        mAdapter.notifyItemChanged(position);
     }
 
     public static void addPhoto(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){

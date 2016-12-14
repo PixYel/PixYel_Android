@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import de.pixyel.dhbw.pixyel.ImageCard;
 import de.pixyel.dhbw.pixyel.MainActivity;
+import de.pixyel.dhbw.pixyel.NewFragment;
 import de.pixyel.dhbw.pixyel.Picture;
 import de.pixyel.dhbw.pixyel.TopFragment;
 
@@ -36,6 +37,8 @@ public class ConnectionManager implements Runnable {
     private static String serverPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmG8OfhJrkN9/rXLh7auyUPcq7UxmYModYswChY8hIMgZO4m+cxOWopxOptUAYedjA4ZAKGp/P1g6n6YaXvtPQqIbi7G5oCT4vbh0zYFgI3wNCJlKtUX1gb6uCQW3rPinANcPtlZoIyegAsn/OW0FMZtc1x8PN0H1MQTlcCctXdJdotuljeYriO1lkRfb3GsotLIYjciMqIMKGQRQ2Rhj81bnxP9FybdNuVIjlS6Rfx9fzaZ2BKIdm7O7/Dzn9TcSZEOZdOSS7CHMMKr14O26g+bR2HiGWx8AbOH2zP3DMpR9/Y8GUrjO6QPqA+GorICGYWxIlrcm4iYx8740FsDaQQIDAQAB";
     //Der private Key des Clients
     private static String clientPrivateKey;
+    private static File folder = MainActivity.cacheFolder;
+    private static boolean connected = false;
 
     public static Queue<Object> sendQueue = new LinkedList<Object>();
 
@@ -234,10 +237,7 @@ public class ConnectionManager implements Runnable {
         if (string == null) {
             return;
         }
-        /*if (string.contains("echo")) {
-            System.out.println("Nachricht vom Server: " + string);
-            return string;
-        }*/
+
         if (string.startsWith("<reply>")) {
             System.out.println(string);
             XML xml = null;
@@ -249,8 +249,8 @@ public class ConnectionManager implements Runnable {
             String sData = xml.getFirstChild("setItem").getFirstChild("data").getContent();
             String id = xml.getFirstChild("setItem").getFirstChild("id").getContent();
             byte[] bData = Base64.decode(sData, Base64.NO_WRAP);
-            File folder = new File("sdcard/DCIM/PixYel");
             final File image = new File(folder, id+".jpg");
+            System.out.println("Download: " + image.toString());
             BufferedOutputStream bos = null;
             try {
                 bos = new BufferedOutputStream(new FileOutputStream(image));
@@ -267,8 +267,15 @@ public class ConnectionManager implements Runnable {
                 MainActivity.activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //TopFragment.addPhoto(image.toString());
                         TopFragment.onItemsLoadComplete();
+                    }
+                });
+            }
+            else if(flag.contains("New")){
+                MainActivity.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NewFragment.onItemsLoadComplete();
                     }
                 });
             }
@@ -282,6 +289,9 @@ public class ConnectionManager implements Runnable {
             e.printStackTrace();
         }
         try {
+            if(decrypted == null){
+                return;
+            }
             //Parse den String in ein XML
             XML receivedXML = XML.openXML(decrypted);
             //Beispielvorgehen: Zeige den XML Baum in der Ausgabe an
@@ -291,11 +301,8 @@ public class ConnectionManager implements Runnable {
                 if (receivedXML.getFirstChild().getName().equals("setItemList")) {
                     receivedXML = receivedXML.getFirstChild("setItemList");
                     ArrayList<XML> list = receivedXML.getChild("item");
-                    System.out.println("test");
                     if (MainActivity.requestFlag.contains("Top")) {
-                        System.out.println("test2 top"+list.size());
                         for (int i = 0; i < list.size(); i++) {
-                            System.out.println("hallo");
                             XML item;
                             item = list.get(i);
                             TopFragment.imageList.add(new ImageCard(
@@ -307,10 +314,48 @@ public class ConnectionManager implements Runnable {
                                     item.getFirstChild("rank").getContent()
                             ));
                             System.out.println(item.toStringGraph());
-                            XML toSend = XML.createNewXML("getItem");
-                            toSend.addChild("id").setContent(item.getFirstChild("id").getContent());
-                            ConnectionManager.sendToServer(toSend);
+
+
+                            final File image = new File(folder, item.getFirstChild("id").getContent() +".jpg");
+                            if(!image.exists()){
+                                XML toSend = XML.createNewXML("getItem");
+                                toSend.addChild("id").setContent(item.getFirstChild("id").getContent());
+                                ConnectionManager.sendToServer(toSend);
+                            }
+                            else{
+                                TopFragment.refreshItem(TopFragment.imageList.size());
+                            }
+
                         }
+                        TopFragment.onItemsLoadComplete();
+                    }
+                    else if(MainActivity.requestFlag.contains("New")){
+                        for (int i = 0; i < list.size(); i++) {
+                            XML item;
+                            item = list.get(i);
+                            NewFragment.imageList.add(new ImageCard(
+                                    item.getFirstChild("id").getContent(),
+                                    item.getFirstChild("date").getContent(),
+                                    item.getFirstChild("upvotes").getContent(),
+                                    item.getFirstChild("downvotes").getContent(),
+                                    item.getFirstChild("votedByUser").getContent(),
+                                    item.getFirstChild("rank").getContent()
+                            ));
+                            System.out.println(item.toStringGraph());
+
+
+                            final File image = new File(folder, item.getFirstChild("id").getContent() +".jpg");
+                            if(!image.exists()){
+                                XML toSend = XML.createNewXML("getItem");
+                                toSend.addChild("id").setContent(item.getFirstChild("id").getContent());
+                                ConnectionManager.sendToServer(toSend);
+                            }
+                            else{
+                                NewFragment.refreshItem(TopFragment.imageList.size());
+                            }
+
+                        }
+                        NewFragment.onItemsLoadComplete();
                     }
                 }
 
