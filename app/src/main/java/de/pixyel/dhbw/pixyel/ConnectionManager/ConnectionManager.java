@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import de.pixyel.dhbw.pixyel.ImageCard;
+import de.pixyel.dhbw.pixyel.LikesFragment;
 import de.pixyel.dhbw.pixyel.MainActivity;
 import de.pixyel.dhbw.pixyel.NewFragment;
 import de.pixyel.dhbw.pixyel.TopFragment;
@@ -274,9 +275,17 @@ public class ConnectionManager implements Runnable {
                     }
                 });
             }
+            else if(flag.contains("Like")){
+                MainActivity.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LikesFragment.onItemsLoadComplete();
+                    }
+                });
+            }
             return;
         }
-        //Decomprimiere den String
+        // Entschlüsseln
         String decrypted = null;
         try {
             decrypted = Encryption.decrypt(string, clientPrivateKey);
@@ -351,6 +360,34 @@ public class ConnectionManager implements Runnable {
 
                         }
                         NewFragment.onItemsLoadComplete();
+                    }
+                    else if(MainActivity.requestFlag.contains("Like")){
+                        for (int i = 0; i < list.size(); i++) {
+                            XML item;
+                            item = list.get(i);
+                            LikesFragment.imageList.add(new ImageCard(
+                                    item.getFirstChild("id").getContent(),
+                                    item.getFirstChild("date").getContent(),
+                                    item.getFirstChild("upvotes").getContent(),
+                                    item.getFirstChild("downvotes").getContent(),
+                                    item.getFirstChild("votedByUser").getContent(),
+                                    item.getFirstChild("rank").getContent()
+                            ));
+                            System.out.println(item.toStringGraph());
+
+
+                            final File image = new File(folder, item.getFirstChild("id").getContent() +".jpg");
+                            if(!image.exists()){
+                                XML toSend = XML.createNewXML("getItem");
+                                toSend.addChild("id").setContent(item.getFirstChild("id").getContent());
+                                ConnectionManager.sendToServer(toSend);
+                            }
+                            else{
+                                LikesFragment.refreshItem(TopFragment.imageList.size());
+                            }
+
+                        }
+                        LikesFragment.onItemsLoadComplete();
                     }
                 }
 

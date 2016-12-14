@@ -90,6 +90,10 @@ public class LikesFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+    public static void refreshItem(int position){
+        mAdapter.notifyItemChanged(position);
+    }
+
     public static void addPhoto(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
         imageList.add(new ImageCard(id, date, upvotes, downvotes, votedByUser, rank));
         onItemsLoadComplete();

@@ -89,7 +89,7 @@ public class TopFragment extends Fragment {
         xml.getFirstChild("location").getFirstChild("lat").setContent(latitude);
         MainActivity.requestFlag = "Top";
         ConnectionManager.sendToServer(xml);
-        onItemsLoadComplete();
+
     }
 
     public static void onItemsLoadComplete(){
