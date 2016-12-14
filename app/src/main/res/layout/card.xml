@@ -22,8 +22,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:onClick="ImageClick"
-            card_view:srcCompat="@drawable/placeholder" />
+            android:onClick="ImageClick" />
 
         <RelativeLayout
             android:layout_width="match_parent"

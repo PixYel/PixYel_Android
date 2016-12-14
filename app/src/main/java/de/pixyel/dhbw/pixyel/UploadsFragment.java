@@ -1,5 +1,7 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.LinkedList;
+
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionListener;
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
+import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
+
+import static android.support.v7.recyclerview.R.styleable.RecyclerView;
 
 public class UploadsFragment extends Fragment {
     private static RecyclerView mRecyclerView;
@@ -25,7 +32,8 @@ public class UploadsFragment extends Fragment {
     private static ByteArrayOutputStream stream;
     private static byte[] imgByte;
 
-    public static LinkedList<ImageCard> imageList;
+    public static LinkedList<ImageCard> imageList = new LinkedList<>();
+    public static LinkedList<Picture> pictureList = new LinkedList<>();
 
     @Nullable
     @Override
@@ -43,14 +51,8 @@ public class UploadsFragment extends Fragment {
         //System.out.println("Bytes:" + image.getByteCount());
         //imgByte = stream.toByteArray();
 
-        File folder = new File("sdcard/DCIM/PixYel");
-        File[] listOfFiles = folder.listFiles();
 
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-               imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
-            }
-        }
+
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         // use this setting to improve performance if you know that changes
@@ -76,20 +78,22 @@ public class UploadsFragment extends Fragment {
 
     public static void refreshItems(){
         imageList.clear();
-        File folder = new File("sdcard/DCIM/PixYel");
-        File[] listOfFiles = folder.listFiles();
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-              imageList.add(new ImageCard(folder + "/" + listOfFiles[i].getName()));
-            }
-            onItemsLoadComplete();
-        }
+        mAdapter.notifyDataSetChanged();
+        XML xml = XML.createNewXML("getItemListUploadedByMe");
+        MainActivity.requestFlag = "Own";
+        ConnectionManager.sendToServer(xml);
+        onItemsLoadComplete();
     }
 
     public static void onItemsLoadComplete(){
         mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
+
+    public static void addPhoto(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
+        imageList.add(new ImageCard(id, date, upvotes, downvotes, votedByUser, rank));
+        onItemsLoadComplete();
+    }
+
 
 }

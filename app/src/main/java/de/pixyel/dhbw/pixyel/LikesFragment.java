@@ -1,5 +1,7 @@
 package de.pixyel.dhbw.pixyel;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +17,12 @@ import android.view.ViewGroup;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionListener;
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
+import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
+
+import static android.support.v7.recyclerview.R.styleable.RecyclerView;
+
 public class LikesFragment extends Fragment {
     private static RecyclerView mRecyclerView;
     private static RecyclerView.Adapter mAdapter;
@@ -24,7 +32,8 @@ public class LikesFragment extends Fragment {
     private static ByteArrayOutputStream stream;
     private static byte[] imgByte;
 
-    public static LinkedList<ImageCard> imageList;
+    public static LinkedList<ImageCard> imageList = new LinkedList<>();
+    public static LinkedList<Picture> pictureList = new LinkedList<>();
 
     @Nullable
     @Override
@@ -41,7 +50,6 @@ public class LikesFragment extends Fragment {
 //        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         //System.out.println("Bytes:" + image.getByteCount());
         //imgByte = stream.toByteArray();
-
 
 
 
@@ -69,13 +77,22 @@ public class LikesFragment extends Fragment {
     }
 
     public static void refreshItems(){
-
+        imageList.clear();
+        mAdapter.notifyDataSetChanged();
+        XML xml = XML.createNewXML("getItemListLikedByMe");
+        MainActivity.requestFlag = "Like";
+        ConnectionManager.sendToServer(xml);
         onItemsLoadComplete();
     }
 
     public static void onItemsLoadComplete(){
         mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public static void addPhoto(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){
+        imageList.add(new ImageCard(id, date, upvotes, downvotes, votedByUser, rank));
+        onItemsLoadComplete();
     }
 
 
