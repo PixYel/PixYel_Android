@@ -22,6 +22,7 @@ import de.pixyel.dhbw.pixyel.ImageCard;
 import de.pixyel.dhbw.pixyel.LikesFragment;
 import de.pixyel.dhbw.pixyel.MainActivity;
 import de.pixyel.dhbw.pixyel.NewFragment;
+import de.pixyel.dhbw.pixyel.PicComment;
 import de.pixyel.dhbw.pixyel.TopFragment;
 import de.pixyel.dhbw.pixyel.UploadsFragment;
 
@@ -429,7 +430,16 @@ public class ConnectionManager implements Runnable {
                         UploadsFragment.onItemsLoadComplete();
                     }
                 }
-                if (receivedXML.getFirstChild().getName().equals("setItemList"))
+                else if (receivedXML.getFirstChild().getName().equals("setComments")){
+                    ArrayList<XML> commentList = receivedXML.getChild("comment");
+                    String id = commentList.get(0).getFirstChild("id").getContent();
+                    LinkedList<String> comments = new LinkedList<>();
+                    for (int i = 0; i < commentList.size(); i++){
+                        comments.add(commentList.get(i).getFirstChild("content").getContent());
+                    }
+                    PicComment.hm.put(id,comments);
+
+                }
 
 
                 return;

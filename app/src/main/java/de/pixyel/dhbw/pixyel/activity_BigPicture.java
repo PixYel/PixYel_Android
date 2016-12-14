@@ -16,15 +16,19 @@ import com.bumptech.glide.Glide;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
+import de.pixyel.dhbw.pixyel.ConnectionManager.XML;
+
 public class activity_BigPicture extends Activity {
 
     private EditText textField;
-    private Uri uri;
     private String comment;
     private ListView commentListView;
     private ImageView bigImage;
     public static LinkedList<String> commentList;
     public static final String KEY = "Picture";
+    String uri;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +37,16 @@ public class activity_BigPicture extends Activity {
 
         textField = (EditText) findViewById(R.id.Input);
         commentListView = (ListView) findViewById(R.id.CommentList);
-        commentList = new LinkedList<String>();
         bigImage = (ImageView) findViewById(R.id.BigImage);
 
         if (getIntent().hasExtra(KEY)) {
-            String uri = getIntent().getStringExtra(KEY);
+            id = getIntent().getStringExtra(KEY);
+            uri = MainActivity.cacheFolder + "/" + id + ".jpg";
             Glide.with(activity_BigPicture.this).load(uri).into(bigImage);
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + KEY);
         }
-
+        commentList = PicComment.hm.get(id);
         // Switch Activity
         final ImageButton Back = (ImageButton) findViewById(R.id.back);
         Back.setOnClickListener(new View.OnClickListener(){
@@ -61,6 +65,10 @@ public class activity_BigPicture extends Activity {
                     commentList.add(comment);
                     addCommentToListView();
                     textField.setText("");
+                    XML xml = XML.createNewXML("addComment");
+                    xml.addChild("id").setContent(id);
+                    xml.addChild("content").setContent(comment);
+                    ConnectionManager.sendToServer(xml);
                 }
             }
         });

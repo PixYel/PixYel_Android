@@ -105,8 +105,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.CardViewHolder> {
                     @Override
                     public void run() {
                         String uri = mDataset.get(index).pic_url;
+                        String id = mDataset.get(index).pic_id;
                         Intent intent = new Intent(MainActivity.activity, activity_BigPicture.class);
-                        intent.putExtra(activity_BigPicture.KEY, uri);
+                        intent.putExtra(activity_BigPicture.KEY, id);
                         MainActivity.activity.startActivity(intent);
                     }
                 });
