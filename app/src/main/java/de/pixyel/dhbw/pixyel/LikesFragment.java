@@ -82,7 +82,6 @@ public class LikesFragment extends Fragment {
         XML xml = XML.createNewXML("getItemListLikedByMe");
         MainActivity.requestFlag = "Like";
         ConnectionManager.sendToServer(xml);
-        onItemsLoadComplete();
     }
 
     public static void onItemsLoadComplete(){

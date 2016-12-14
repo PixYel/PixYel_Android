@@ -80,14 +80,17 @@ public class UploadsFragment extends Fragment {
         imageList.clear();
         mAdapter.notifyDataSetChanged();
         XML xml = XML.createNewXML("getItemListUploadedByMe");
-        MainActivity.requestFlag = "Own";
+        MainActivity.requestFlag = "Upload";
         ConnectionManager.sendToServer(xml);
-        onItemsLoadComplete();
     }
 
     public static void onItemsLoadComplete(){
         mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public static void refreshItem(int position){
+        mAdapter.notifyItemChanged(position);
     }
 
     public static void addPhoto(String id, String date, String upvotes, String downvotes, String votedByUser, String rank){

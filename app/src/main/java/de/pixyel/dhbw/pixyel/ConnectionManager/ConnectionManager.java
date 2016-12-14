@@ -23,6 +23,7 @@ import de.pixyel.dhbw.pixyel.LikesFragment;
 import de.pixyel.dhbw.pixyel.MainActivity;
 import de.pixyel.dhbw.pixyel.NewFragment;
 import de.pixyel.dhbw.pixyel.TopFragment;
+import de.pixyel.dhbw.pixyel.UploadsFragment;
 
 
 public class ConnectionManager implements Runnable {
@@ -283,6 +284,14 @@ public class ConnectionManager implements Runnable {
                     }
                 });
             }
+            else if(flag.contains("Uploads")){
+                MainActivity.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        UploadsFragment.onItemsLoadComplete();
+                    }
+                });
+            }
             return;
         }
         // Entschlüsseln
@@ -389,7 +398,37 @@ public class ConnectionManager implements Runnable {
                         }
                         LikesFragment.onItemsLoadComplete();
                     }
+
+                    else if(MainActivity.requestFlag.contains("Upload")){
+                        for (int i = 0; i < list.size(); i++) {
+                            XML item;
+                            item = list.get(i);
+                            UploadsFragment.imageList.add(new ImageCard(
+                                    item.getFirstChild("id").getContent(),
+                                    item.getFirstChild("date").getContent(),
+                                    item.getFirstChild("upvotes").getContent(),
+                                    item.getFirstChild("downvotes").getContent(),
+                                    item.getFirstChild("votedByUser").getContent(),
+                                    item.getFirstChild("rank").getContent()
+                            ));
+                            System.out.println(item.toStringGraph());
+
+
+                            final File image = new File(folder, item.getFirstChild("id").getContent() +".jpg");
+                            if(!image.exists()){
+                                XML toSend = XML.createNewXML("getItem");
+                                toSend.addChild("id").setContent(item.getFirstChild("id").getContent());
+                                ConnectionManager.sendToServer(toSend);
+                            }
+                            else{
+                                UploadsFragment.refreshItem(TopFragment.imageList.size());
+                            }
+
+                        }
+                        UploadsFragment.onItemsLoadComplete();
+                    }
                 }
+                if (receivedXML.getFirstChild().getName().equals("setItemList"))
 
 
                 return;

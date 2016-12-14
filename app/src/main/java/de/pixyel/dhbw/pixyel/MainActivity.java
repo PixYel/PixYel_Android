@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
+import de.pixyel.dhbw.pixyel.ConnectionManager.Caching;
 import de.pixyel.dhbw.pixyel.ConnectionManager.ConnectionManager;
 
 
@@ -210,6 +211,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        Caching.deleteOldPictures();
     }
 
     @Override

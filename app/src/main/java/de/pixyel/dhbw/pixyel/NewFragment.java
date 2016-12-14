@@ -85,7 +85,6 @@ public class NewFragment extends Fragment {
         XML xml = XML.createNewXML("getItemListByDate");
         MainActivity.requestFlag = "New";
         ConnectionManager.sendToServer(xml);
-        onItemsLoadComplete();
     }
 
     public static void onItemsLoadComplete(){
