@@ -236,7 +236,7 @@ public class ConnectionManager implements Runnable {
             System.out.println("NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL NULL");
             return;
         }
-
+        // Wenn string unverschlüsselt ist, ist es ein Bild
         if (string.startsWith("<reply>")) {
             System.out.println(string);
             XML xml = null;
@@ -251,7 +251,7 @@ public class ConnectionManager implements Runnable {
             final File image = new File(folder, id+".jpg");
             System.out.println("Download: " + image.toString());
             BufferedOutputStream bos = null;
-            try {
+            try {   // Bild in Datei schreiben
                 bos = new BufferedOutputStream(new FileOutputStream(image));
                 bos.write(bData);
                 bos.flush();
@@ -261,7 +261,7 @@ public class ConnectionManager implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String flag = MainActivity.requestFlag;
+            String flag = MainActivity.requestFlag; // Gibt an welche Liste das Bild angefordert hat
             if(flag.contains("Top")){
                 MainActivity.activity.runOnUiThread(new Runnable() {
                     @Override
@@ -309,7 +309,6 @@ public class ConnectionManager implements Runnable {
             }
             //Parse den String in ein XML
             XML receivedXML = XML.openXML(decrypted);
-            //Beispielvorgehen: Zeige den XML Baum in der Ausgabe an
             System.out.println("Command received: \n" + receivedXML.toString());
 
             try {
@@ -317,7 +316,7 @@ public class ConnectionManager implements Runnable {
                     receivedXML = receivedXML.getFirstChild("setItemList");
                     ArrayList<XML> list = receivedXML.getChild("item");
                     if (MainActivity.requestFlag.contains("Top")) {
-                        for (int i = 0; i < list.size(); i++) {
+                        for (int i = 0; i < list.size(); i++) {     // Fordere für jedes Item das entsprechende Bild an
                             XML item;
                             item = list.get(i);
                             TopFragment.imageList.add(new ImageCard(
