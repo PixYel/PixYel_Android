@@ -46,7 +46,8 @@ public class activity_BigPicture extends Activity {
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + KEY);
         }
-        commentList = PicComment.hm.get(id);
+        //commentList = PicComment.hm.get(id);
+        commentList = new LinkedList<>();
         // Switch Activity
         final ImageButton Back = (ImageButton) findViewById(R.id.back);
         Back.setOnClickListener(new View.OnClickListener(){
